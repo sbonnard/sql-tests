@@ -2,12 +2,12 @@ insert into product (ref_product, name_product, price, description) values (1, '
 insert into product (ref_product, name_product, price, description) values (2, 'Couteau', 28.52, 'nulla neque libero convallis eget eleifend');
 insert into product (ref_product, name_product, price, description) values (3, 'Corde d''arc', 6.7, 'augue aliquam erat volutpat in congue etiam');
 insert into product (ref_product, name_product, price, description) values (4, 'Cotte de maille', 3.37, 'tempus sit amet sem fusce consequat nulla');
-insert into product (ref_product, name_product, price, description) values (5, 'Cotte de maille', 6.36, 'non lectus aliquam sit amet diam in magna bibendum imperdiet');
-insert into product (ref_product, name_product, price, description) values (6, 'Carreaux', 46.39, 'semper sapien a');
+insert into product (ref_product, name_product, price, description) values (5, 'Bottes', 6.36, 'non lectus aliquam sit amet diam in magna bibendum imperdiet');
+insert into product (ref_product, name_product, price, description) values (6, 'Lance', 46.39, 'semper sapien a');
 insert into product (ref_product, name_product, price, description) values (7, 'Carreaux', 44.91, 'augue vestibulum rutrum rutrum neque aenean auctor gravida');
 insert into product (ref_product, name_product, price, description) values (8, 'Arbalète', 30.09, 'potenti cras');
-insert into product (ref_product, name_product, price, description) values (9, 'Carreaux', 5.88, 'risus semper porta volutpat quam');
-insert into product (ref_product, name_product, price, description) values (10, 'Carreaux', 47.06, 'suscipit nulla elit ac nulla sed vel enim sit amet');
-insert into product (ref_product, name_product, price, description) values (11, 'Hache', 6.79, 'lectus aliquam sit amet');
+insert into product (ref_product, name_product, price, description) values (9, 'Briquet', 5.88, 'risus semper porta volutpat quam');
+insert into product (ref_product, name_product, price, description) values (10, 'Dague', 47.06, 'suscipit nulla elit ac nulla sed vel enim sit amet');
+insert into product (ref_product, name_product, price, description) values (11, 'Épée à deux mains', 6.79, 'lectus aliquam sit amet');
 insert into product (ref_product, name_product, price, description) values (12, 'Arc', 17.78, 'justo aliquam quis turpis eget elit sodales scelerisque');
 insert into product (ref_product, name_product, price, description) values (13, 'Épée', 29.02, 'non velit nec nisi vulputate nonummy');

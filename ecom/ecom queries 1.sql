@@ -9,24 +9,30 @@ SELECT * FROM customer WHERE firstname = "Ramsay";
 
 -- 2/ Récupérer les noms et prénoms des clients par ordre alphabétique
 
+-- Only lasnames :
 SELECT lastname FROM customer ORDER BY lastname ASC;
+
+-- Only firstname :
 SELECT firstname FROM customer ORDER BY firstname ASC;
+
+-- Both :
+SELECT lastname, firstname FROM customer ORDER BY lastname, firstname ASC;
 
 -- 3/ Récupérer les noms, prénoms et email du client numéro 15
 
-
+SELECT lastname, firstname, email FROM customer WHERE id_customer = 15;
 
 -- 4/ Récupérer les adresses email des clients numéro 20, 34, 50, 69 et 88.
 
-
+SELECT email FROM customer WHERE id_customer IN (20, 34, 50, 69, 88);
 
 -- 5/ Récupérer les noms et prénoms des clients dont l'ajout a été effectué avant 2022
 
-
+SELECT lastname, firstname FROM customer WHERE date_create < "2021-12-31";
 
 -- 6/ Récupérer toutes les données des clients dont l'ajout a été effectué en juin 2022
 
-
+SELECT lastname, firstname FROM customer WHERE date_create BETWEEN 2022-06-01 AND 2022-06-30;
 
 -- 7/ Récupérer le nom et le prix des produits du plus cher au moins cher
 
