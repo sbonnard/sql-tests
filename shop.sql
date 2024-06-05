@@ -106,3 +106,25 @@ INSERT INTO
     order_product (ref_product, id_order, quantity, price_purchase)
 VALUES
     (1, 2, 2, 225.95);
+
+-- Emptying TABLE order_product
+TRUNCATE order_product;
+
+-- Emptying TABLE orders but not working
+TRUNCATE orders;
+
+-- This line does not work
+DELETE FROM orders WHERE 'orders'.'id_orders' = 2; 
+
+-- Emptying TABLE orders
+DELETE FROM orders WHERE id_orders = 1;
+DELETE FROM orders WHERE id_orders = 2;
+
+-- Emptying TABLE customer
+DELETE FROM customer WHERE id_customer = 1;
+DELETE FROM customer WHERE id_customer = 2;
+
+-- Emptying TABLE product
+DELETE FROM product WHERE ref_product = 1;
+DELETE FROM product WHERE ref_product = 2;
+DELETE FROM product WHERE ref_product = 3;
