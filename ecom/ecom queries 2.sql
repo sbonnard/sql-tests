@@ -57,7 +57,9 @@ GROUP BY id_order;
 
 -- 10/ Récupérer les identifiants des commandes et pour chacune le montant total payé par le client
 
-
+SELECT id_order, SUM(price_order * quantity) AS total_price
+FROM product_order
+GROUP BY id_order;
 
 -- 11/ Récupérer pour chaque mois le nombre de commandes passées classé par mois croissant
 
