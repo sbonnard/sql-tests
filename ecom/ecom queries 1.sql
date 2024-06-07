@@ -173,3 +173,10 @@ UPDATE product
 SET price = 1.10 * price
 WHERE name_product
 LIKE "cheese%";
+
+
+--Round the result
+UPDATE product
+SET price = ROUND(1.10 * price, 2)
+WHERE name_product
+LIKE "cheese%";
