@@ -59,38 +59,59 @@ SELECT name_product, price FROM product ORDER BY price DESC;
 
 SELECT name_product, price FROM product ORDER BY price ASC LIMIT 5;
 
-
 -- 9/ Récupérer le nom des produits qui contiennent le mot "bread"
 
-
+SELECT name_product FROM product WHERE name_product LIKE "%Bread%";
 
 -- 10/ Récupérer le nom des produits qui commencent par le mot "wine"
 
-
+SELECT name_product FROM product WHERE name_product LIKE 'Wine%';
 
 -- 11/ Récupérer le nom et le prix du vin le moins cher
 
-
+SELECT name_product, price
+FROM product
+WHERE name_product
+LIKE 'Wine%'
+ORDER BY price ASC LIMIT 1;
 
 -- 12/ Récupérer le nom et le prix des produits dont le prix est compris entre 15 et 20, classés par ordre alphabétique
 
-
+SELECT name_product, price 
+FROM product
+WHERE price 
+BETWEEN 15 AND 20
+ORDER BY name_product ASC;
 
 -- 13/ Récupérer le nom et le prix des vins dont le prix est compris entre 8 et 10
 
-
+SELECT name_product, price
+FROM product
+WHERE name_product LIKE 'Wine%'
+AND price BETWEEN 8 AND 10;
 
 -- 14/ Récupérer le numéro et la date des commandes passées au mois de mai 2022
 
-
+SELECT id_order, date_order
+FROM orders
+WHERE date_order
+LIKE '%2022-05%';
 
 -- 15/ Récupérer le numéro et la date des commandes passées par le client numéro 59 en 2022, classées par date croissante. 
 
-
+SELECT id_order, date_order, id_customer
+FROM orders 
+WHERE id_customer = 59
+AND date_order
+LIKE '%2022%'
+ORDER BY date_order;
 
 -- 16/ Récupérer le prénom et le nom des clients dont le fournisseur de l'adresse email est "google.com"
 
-
+SELECT firstname, lastname, email
+FROM customer
+WHERE email
+LIKE '%google.com';
 
 -- 17/ Récupérer le numéro et la date de la dernière commande du client numéro 42
 
