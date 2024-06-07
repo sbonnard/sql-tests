@@ -13,12 +13,12 @@ ORDER BY date_create;
 
 -- 3/ Récupérer le prix du produit le plus bas
 
-SELECT MIN(price)
+SELECT MIN(price) AS min_price
 FROM product;
 
 -- 4/ Récupérer le prix du produit le plus élevé
 
-SELECT MAX(price)
+SELECT MAX(price) AS max_price
 FROM product;
 
 -- 5/ Récupérer le numéro des clients ayant commandé avec la date de leur dernière commande,
