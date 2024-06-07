@@ -1,39 +1,25 @@
 
 -- 1/ Récupérer le nombre de clients total dans la base de données
 
-SELECT id_customer
-FROM customer
-ORDER BY id_customer DESC
-LIMIT 1;
-
-SELECT id_customer, MAX(id_customer) as nb_customers
-FROM customer
-GROUP BY id_customer
-ORDER BY id_customer DESC
-LIMIT 1;
+SELECT COUNT(id_customer) AS nb_customers
+FROM customer;
 
 -- 2/ Récupérer le nombre de clients qui ont été créés chaque jour
 
-SELECT id_customer, date_create, COUNT(date_create) as create_by_date
+SELECT date_create, COUNT(date_create) AS create_by_date
 FROM customer
-GROUP BY id_customer
+GROUP BY date_create
 ORDER BY date_create;
-
-SELECT COUNT(*) AS nb
-FROM orders
-WHERE id_customer = 5;
 
 -- 3/ Récupérer le prix du produit le plus bas
 
-SELECT price
-FROM product
-ORDER BY price ASC LIMIT 1;
+SELECT MIN(price)
+FROM product;
 
 -- 4/ Récupérer le prix du produit le plus élevé
 
-SELECT price
-FROM product
-ORDER BY price DESC LIMIT 1;
+SELECT MAX(price)
+FROM product;
 
 -- 5/ Récupérer le numéro des clients ayant commandé avec la date de leur dernière commande,
 -- classés par cette date de dernière commande décroissant
