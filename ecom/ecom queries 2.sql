@@ -26,15 +26,21 @@ FROM product;
 
 SELECT id_customer, MAX(date_order) AS last_order
 FROM orders
-GROUP BY id_customer;
+GROUP BY id_customer
+ORDER BY last_order DESC;
 
 -- 6/ Récupérer la liste des jours de commande par ordre décroissant avec pour chaque jour le nombre de commandes passées
 
-
+SELECT date_order, COUNT(date_order) AS order_by_date
+FROM orders
+GROUP BY date_order
+ORDER BY date_order DESC;
 
 -- 7/ Récupérer les identifiants des commandes et pour chacune le nombre total de produits achetés
 
-
+SELECT id_order, SUM(quantity)
+FROM product_order
+GROUP BY id_order;
 
 -- 8/ Récupérer le nombre de comptes clients créés pour chaque année
 
