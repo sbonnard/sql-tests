@@ -73,8 +73,7 @@ WHERE EXTRACT(YEAR_MONTH FROM date_create) = 202206;
 
 SELECT * 
 FROM customer 
-WHERE date_create 
-LIKE '%2022-06%';
+WHERE date_create LIKE '%2022-06%';
 
 -- 7/ Récupérer le nom et le prix des produits du plus cher au moins cher
 
@@ -93,22 +92,19 @@ LIMIT 5;
 
 SELECT name_product 
 FROM product 
-WHERE name_product 
-LIKE "%Bread%";
+WHERE name_product LIKE "%bread%";
 
 -- 10/ Récupérer le nom des produits qui commencent par le mot "wine"
 
 SELECT name_product 
 FROM product 
-WHERE name_product 
-LIKE 'Wine%';
+WHERE name_product LIKE 'Wine%';
 
 -- 11/ Récupérer le nom et le prix du vin le moins cher
 
 SELECT name_product, price
 FROM product
-WHERE name_product
-LIKE 'Wine%'
+WHERE name_product LIKE 'Wine%'
 ORDER BY price ASC LIMIT 1;
 
 -- 12/ Récupérer le nom et le prix des produits dont le prix est compris entre 15 et 20, classés par ordre alphabétique
