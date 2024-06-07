@@ -129,6 +129,8 @@ FROM orders
 WHERE date_order
 LIKE '%2022-05%';
 
+-- OTHER SOLUTIONS IN QUESTION 6
+
 -- 15/ Récupérer le numéro et la date des commandes passées par le client numéro 59 en 2022, classées par date croissante. 
 
 SELECT id_order, date_order, id_customer
@@ -136,7 +138,7 @@ FROM orders
 WHERE id_customer = 59
 AND date_order
 LIKE '%2022%'
-ORDER BY date_order;
+ORDER BY date_order ASC;
 
 -- 16/ Récupérer le prénom et le nom des clients dont le fournisseur de l'adresse email est "google.com"
 
