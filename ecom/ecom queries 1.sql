@@ -42,30 +42,66 @@ WHERE id_customer IN (20, 34, 50, 69, 88);
 
 SELECT lastname, firstname 
 FROM customer 
-WHERE date_create < "2021-12-31";
+WHERE date_create < "2022-01-01";
+
+-- OR
+
+SELECT lastname, firstname 
+FROM customer 
+WHERE YEAR(date_create) < 2022;
 
 -- 6/ Récupérer toutes les données des clients dont l'ajout a été effectué en juin 2022
 
-SELECT lastname, firstname 
+SELECT * 
 FROM customer 
 WHERE date_create 
 BETWEEN '2022-06-01' AND '2022-06-30';
 
+-- OR 
+
+SELECT * 
+FROM customer 
+WHERE YEAR(date_create) = 2022 AND MONTH(date_create) = 06;
+
+-- OR
+
+SELECT *
+FROM customer
+WHERE EXTRACT(YEAR_MONTH FROM date_create) = 202206;
+
+-- OR BETTER
+
+SELECT * 
+FROM customer 
+WHERE date_create 
+LIKE '%2022-06%';
+
 -- 7/ Récupérer le nom et le prix des produits du plus cher au moins cher
 
-SELECT name_product, price FROM product ORDER BY price DESC;
+SELECT name_product, price 
+FROM product 
+ORDER BY price DESC;
 
 -- 8/ Récupérer le nom et le prix des 5 produits les moins cher
 
-SELECT name_product, price FROM product ORDER BY price ASC LIMIT 5;
+SELECT name_product, price 
+FROM product 
+ORDER BY price ASC 
+LIMIT 5;
 
 -- 9/ Récupérer le nom des produits qui contiennent le mot "bread"
 
-SELECT name_product FROM product WHERE name_product LIKE "%Bread%";
+SELECT name_product 
+FROM product 
+WHERE name_product 
+LIKE "%Bread%";
 
 -- 10/ Récupérer le nom des produits qui commencent par le mot "wine"
 
-SELECT name_product FROM product WHERE name_product LIKE 'Wine%';
+SELECT name_product 
+FROM product 
+WHERE name_product 
+LIKE 'Wine%';
 
 -- 11/ Récupérer le nom et le prix du vin le moins cher
 
