@@ -9,10 +9,10 @@ SELECT * FROM customer WHERE firstname = "Ramsay";
 
 -- 2/ Récupérer les noms et prénoms des clients par ordre alphabétique
 
--- Only lasnames :
+-- Only lastnames :
 SELECT lastname FROM customer ORDER BY lastname ASC;
 
--- Only firstname :
+-- Only firstnames :
 SELECT firstname FROM customer ORDER BY firstname ASC;
 
 -- Both :
