@@ -38,7 +38,7 @@ ORDER BY date_order DESC;
 
 -- 7/ Récupérer les identifiants des commandes et pour chacune le nombre total de produits achetés
 
-SELECT id_order, SUM(quantity)
+SELECT id_order, SUM(quantity) AS quantity_order
 FROM product_order
 GROUP BY id_order;
 
