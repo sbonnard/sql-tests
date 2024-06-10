@@ -108,12 +108,18 @@ HAVING total_customers_orders >= 3;
 
 -- BONUS.16/ Récupérer les identifiants des produits dont le prix a varié de plus 8 € dans l'historique des ventes 
 
-SELECT ref_product
 
 -- BONUS.17/ Récupérer l'identifiant des produits dont le prix de vente moyen est supérieur à 20€ et dont au moins 15 exemplaires ont déjà vendus 
 
-SELECT ref_product, SUM(quantity) AS total_quantity_sold
+SELECT ref_product, AVG(price_order) AS average_price, SUM(quantity) AS total_quantity_sold
 FROM product_order
-WHERE price_order > 20
 GROUP BY ref_product
-HAVING total_quantity_sold >= 15;
+HAVING total_quantity_sold >= 15 AND average_price > 20;
+
+
+-- First version but not complete
+-- SELECT ref_product, SUM(quantity) AS total_quantity_sold
+-- FROM product_order
+-- WHERE price_order > 20
+-- GROUP BY ref_product
+-- HAVING total_quantity_sold >= 15;
