@@ -1,13 +1,11 @@
 
 -- 1/ Récupérer le numéro, la date et l'email du client des commandes passées en 2021, ordonnées par date
 
-SELECT c.id_customer, date_order, email
+SELECT id_order, date_order, email
 FROM orders o 
     JOIN customer c USING(id_customer)
-WHERE date_order LIKE "%2021%"
+WHERE YEAR(date_order) = 2021
 ORDER BY date_order;
-
-
 
 -- 2/ Récupérer le nom, le prénom et l'email des clients n'ayant jamais passé de commande
 
@@ -87,7 +85,10 @@ GROUP BY ref_product;
 -- 9/ Récupérer les noms des produits qui n'ont jamais été vendus
 -- à un prix aussi bas qu'aujourd'hui
 
-
+SELECT ref_product, name_product, MIN(price_order)
+FROM product p
+JOIN product_order po USING (ref_product)
+GROUP BY p.ref_product;
 
 -- 10/ Récupérer pour toutes les commandes passées le 27 novembre 2021,
 -- le nom, le prénom, l'email du client et le montant total
