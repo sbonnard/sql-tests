@@ -1,11 +1,20 @@
 
 -- 1/ Récupérer le numéro, la date et l'email du client des commandes passées en 2021, ordonnées par date
 
--- SELECT c.id_customer, date_order, email
--- FROM orders o 
---     JOIN customer c USING(id_customer)
--- WHERE date_order LIKE "%2021%"
--- ORDER BY date_order;
+SELECT c.id_customer, date_order, email
+FROM orders o 
+    JOIN customer c USING(id_customer)
+WHERE date_order LIKE "%2021%"
+ORDER BY date_order;
+
+
+
+-- 2/ Récupérer le nom, le prénom et l'email des clients n'ayant jamais passé de commande
+
+-- SELECT lastname, firstname, email
+-- FROM customer c
+--     JOIN orders o USING(id_customer)
+-- WHERE o.id_customer = NULL;
 
 SELECT c.id_customer
 FROM customer c
@@ -14,13 +23,6 @@ NOT IN (
     SELECT id_customer
     FROM orders
 );
-
--- 2/ Récupérer le nom, le prénom et l'email des clients n'ayant jamais passé de commande
-
-SELECT lastname, firstname, email
-FROM customer c
-    JOIN orders o USING(id_customer)
-WHERE o.id_customer = NULL;
 
 -- 3/ Récupérer pour la commande numéro 15 pour chaque produit acheté : son nom, la quantité achetée, le prix d'achat unitaire et le prix total de la ligne
 
@@ -33,7 +35,13 @@ GROUP BY po.ref_product;
 
 -- 4/ Récupérer le nom et le prix des produits qui n'ont jamais été vendus
 
-
+SELECT name_product, price
+FROM product p
+WHERE p.ref_product
+NOT IN (
+    SELECT ref_product
+    FROM product_order
+);
 
 -- 5/ Récupérer le numéro, la date et le montant total des commandes d'avril 2022
 
