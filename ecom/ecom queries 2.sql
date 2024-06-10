@@ -92,3 +92,9 @@ HAVING total_quantity_sold > 20;
 
 -- 14/ Récupérer la référence et le chiffre d'affaire du produit qui a généré le plus de chiffre d'affaire
 
+SELECT ref_product, SUM(quantity * price_order) AS best_product_revenue
+FROM product_order
+GROUP BY ref_product
+HAVING best_product_revenue
+ORDER BY best_product_revenue DESC
+LIMIT 1;
