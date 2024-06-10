@@ -39,7 +39,7 @@ ORDER BY last_order DESC;
 
 -- 6/ Récupérer la liste des jours de commande par ordre décroissant avec pour chaque jour le nombre de commandes passées
 
-SELECT date_order, COUNT(date_order) AS order_by_date
+SELECT date_order, COUNT(id_order) AS order_by_date
 FROM orders
 GROUP BY date_order
 ORDER BY date_order DESC;
@@ -52,7 +52,7 @@ GROUP BY id_order;
 
 -- 8/ Récupérer le nombre de comptes clients créés pour chaque année
 
-SELECT COUNT(DISTINCT id_customer) AS number_clients, YEAR(date_create) AS create_by_year
+SELECT COUNT(id_customer) AS number_clients, YEAR(date_create) AS create_by_year
 FROM customer
 GROUP BY create_by_year;
 
@@ -71,10 +71,10 @@ GROUP BY id_order;
 
 -- 11/ Récupérer pour chaque mois le nombre de commandes passées classé par mois croissant
 
-SELECT COUNT(id_order) AS nb_orders, MONTH(date_order) AS month_orders
+SELECT COUNT(id_order) AS nb_orders, MONTH(date_order) AS month_nb, MONTHNAME(date_order) AS month
 FROM orders
-GROUP BY month_orders
-ORDER BY month_orders;
+GROUP BY month_nb, month
+ORDER BY month_nb ASC;
 
 -- 12/ Récupérer les identifiants des clients ayant passées au moins 3 commandes
 
@@ -108,6 +108,10 @@ HAVING total_customers_orders >= 3;
 
 -- BONUS.16/ Récupérer les identifiants des produits dont le prix a varié de plus 8 € dans l'historique des ventes 
 
+SELECT ref_product, AVG(price_order) as average_price
+FROM product_order
+GROUP BY ref_product
+HAVING average_price - average_price = 8;
 
 -- BONUS.17/ Récupérer l'identifiant des produits dont le prix de vente moyen est supérieur à 20€ et dont au moins 15 exemplaires ont déjà vendus 
 
