@@ -45,7 +45,10 @@ NOT IN (
 
 -- 5/ Récupérer le numéro, la date et le montant total des commandes d'avril 2022
 
-
+SELECT id_order, date_order, price_order
+FROM orders o
+    JOIN product_order po USING(id_order)
+WHERE date_order LIKE '%2022-04%';
 
 -- 6/ Récupérer l'historique des commandes par ordre décroissant pour le client numéro 14
 -- en affichant le montant total de chaque commande
