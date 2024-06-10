@@ -81,13 +81,19 @@ FROM product p
 LEFT JOIN product_order po USING(ref_product)
 GROUP BY ref_product;
 
+-- OR FOR ONLY TWO PARAMETERS
+SELECT ref_product, name_product, IFNULL(SUM(price_order * quantity), 0.00) AS total_price
+FROM product p
+LEFT JOIN product_order po USING(ref_product)
+GROUP BY ref_product;
+
 -- 9/ Récupérer les noms des produits qui n'ont jamais été vendus
 -- à un prix aussi bas qu'aujourd'hui
 
 SELECT ref_product, name_product, MIN(price_order)
 FROM product p
 JOIN product_order po USING (ref_product)
-GROUP BY p.ref_product;
+GROUP BY ref_product;
 
 -- 10/ Récupérer pour toutes les commandes passées le 27 novembre 2021,
 -- le nom, le prénom, l'email du client et le montant total
