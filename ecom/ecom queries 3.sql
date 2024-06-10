@@ -9,11 +9,6 @@ ORDER BY date_order;
 
 -- 2/ Récupérer le nom, le prénom et l'email des clients n'ayant jamais passé de commande
 
--- SELECT lastname, firstname, email
--- FROM customer c
---     JOIN orders o USING(id_customer)
--- WHERE o.id_customer = NULL;
-
 SELECT id_customer, lastname, firstname, email
 FROM customer
 WHERE id_customer
@@ -26,17 +21,15 @@ NOT IN (
 
 SELECT id_customer, lastname, firstname, email
 FROM customer c
-    LEFT JOIN orders USING(id_customer)
+    LEFT JOIN orders o USING(id_customer)
 WHERE ISNULL(id_order);
 
 -- 3/ Récupérer pour la commande numéro 15 pour chaque produit acheté : son nom, la quantité achetée, le prix d'achat unitaire et le prix total de la ligne
 
-SELECT id_order, name_product, quantity, price, SUM(quantity * price) AS total_price
-FROM orders o
-    JOIN product_order po USING(id_order)
-    JOIN product p USING (ref_product)
-WHERE o.id_order = po.id_order AND id_order = 15
-GROUP BY po.ref_product;
+SELECT name_product, quantity, price_order, quantity * price_order AS total_price
+FROM product p
+    JOIN product_order po USING(ref_product)
+WHERE id_order = 15;
 
 -- 4/ Récupérer le nom et le prix des produits qui n'ont jamais été vendus
 
