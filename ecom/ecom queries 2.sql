@@ -95,6 +95,5 @@ HAVING total_quantity_sold > 20;
 SELECT ref_product, SUM(quantity * price_order) AS best_product_revenue
 FROM product_order
 GROUP BY ref_product
-HAVING best_product_revenue
 ORDER BY best_product_revenue DESC
 LIMIT 1;
