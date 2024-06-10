@@ -97,3 +97,17 @@ FROM product_order
 GROUP BY ref_product
 ORDER BY best_product_revenue DESC
 LIMIT 1;
+
+-- BONUS.15/ Récupérer les identifiants des clients ayant passés au moins 3 commandes en 2022
+
+SELECT id_customer, COUNT(id_order) AS total_customers_orders
+FROM orders
+WHERE date_order LIKE "%2022%"
+GROUP BY id_customer
+HAVING total_customers_orders >= 3;
+
+-- BONUS.16/ Récupérer l'identifiant du produit ayant généré le plus de chiffre d'affaire
+
+
+
+-- BONUS.17/ Récupérer l'identifiant des produits dont le prix de vente moyen est supérieur à 20€ et dont au moins 15 exemplaires ont déjà vendus 
