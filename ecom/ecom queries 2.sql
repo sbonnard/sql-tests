@@ -71,10 +71,18 @@ GROUP BY id_order;
 
 -- 11/ Récupérer pour chaque mois le nombre de commandes passées classé par mois croissant
 
-SELECT COUNT(id_order) AS nb_orders, MONTH(date_order) AS month_nb, MONTHNAME(date_order) AS month
+SELECT COUNT(id_order) AS nb_orders, MONTH(date_order) AS month_nb, YEAR(date_order) AS year
 FROM orders
-GROUP BY month_nb, month
+GROUP BY month_nb, year
 ORDER BY month_nb ASC;
+
+-- OR 
+
+SELECT 
+DATE_FORMAT (date_order, "%Y-%m") AS ym, COUNT(id_order) AS nb_orders
+FROM orders
+GROUP BY ym
+ORDER BY ym;
 
 -- 12/ Récupérer les identifiants des clients ayant passées au moins 3 commandes
 
