@@ -58,11 +58,10 @@ WHERE YEAR(date_order) = 2022 AND MONTH(date_order) = 04;
 -- 6/ Récupérer l'historique des commandes par ordre décroissant pour le client numéro 14
 -- en affichant le montant total de chaque commande
 
-SELECT id_order, c.id_customer, date_order, SUM(price_order * quantity) AS total_price
-FROM customer c
-    JOIN orders o USING(id_customer)
+SELECT id_order, id_customer, date_order, SUM(price_order * quantity) AS total_price
+FROM orders o
     JOIN product_order USING(id_order)
-WHERE c.id_customer = 14
+WHERE id_customer = 14
 GROUP BY id_order
 ORDER BY date_order DESC;
 
