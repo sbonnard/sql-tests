@@ -79,9 +79,9 @@ HAVING total_quantity >= 10;
 
 -- 8/ Récupérer le nom et le total de chiffre d'affaire de tous les produits (0.00 si le produit n'a pas été vendu)
 
-SELECT ref_product, name_product, SUM(price_order * quantity) AS total_price
+SELECT ref_product, name_product, COALESCE(SUM(price_order * quantity), 0.00) AS total_price
 FROM product p
-JOIN product_order po USING(ref_product)
+LEFT JOIN product_order po USING(ref_product)
 GROUP BY ref_product;
 
 -- SELECT ref_product, name_product
