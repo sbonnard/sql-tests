@@ -70,7 +70,7 @@ ORDER BY date_order DESC;
 SELECT ref_product, name_product, SUM(quantity) AS total_quantity
 FROM product p
     JOIN product_order po USING(ref_product)
-WHERE p.ref_product = po.ref_product AND name_product LIKE "wine%"
+WHERE name_product LIKE "wine%"
 GROUP BY ref_product
 HAVING total_quantity >= 10;
 
