@@ -117,10 +117,10 @@ HAVING total_customers_orders >= 3;
 
 -- BONUS.16/ Récupérer les identifiants des produits dont le prix a varié de plus 8 € dans l'historique des ventes 
 
-SELECT ref_product, AVG(price_order) as average_price
+SELECT ref_product, MAX(price_order) AS max_price, MIN(price_order) AS min_price
 FROM product_order
 GROUP BY ref_product
-HAVING average_price - average_price = 8;
+HAVING max_price - min_price > 8;
 
 -- BONUS.17/ Récupérer l'identifiant des produits dont le prix de vente moyen est supérieur à 20€ et dont au moins 15 exemplaires ont déjà vendus 
 
