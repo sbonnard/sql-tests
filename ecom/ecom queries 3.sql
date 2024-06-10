@@ -35,11 +35,18 @@ WHERE id_order = 15;
 
 SELECT name_product, price
 FROM product p
-WHERE p.ref_product
+WHERE ref_product
 NOT IN (
     SELECT ref_product
     FROM product_order
 );
+
+-- OR BETTER 
+
+SELECT name_product, price
+FROM product p
+    LEFT JOIN product_order po USING(ref_product)
+WHERE id_order IS NULL;
 
 -- 5/ Récupérer le numéro, la date et le montant total des commandes d'avril 2022
 
