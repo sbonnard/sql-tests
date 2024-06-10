@@ -14,9 +14,9 @@ ORDER BY date_order;
 --     JOIN orders o USING(id_customer)
 -- WHERE o.id_customer = NULL;
 
-SELECT c.id_customer
-FROM customer c
-WHERE c.id_customer
+SELECT id_customer, lastname, firstname, email
+FROM customer
+WHERE id_customer
 NOT IN (
     SELECT id_customer
     FROM orders
@@ -24,10 +24,10 @@ NOT IN (
 
 -- OR BETTER 
 
-SELECT c.id_customer
+SELECT id_customer, lastname, firstname, email
 FROM customer c
-JOIN orders USING(id_customer)
-WHERE c.id_customer IS NULL;
+    LEFT JOIN orders USING(id_customer)
+WHERE ISNULL(id_order);
 
 -- 3/ Récupérer pour la commande numéro 15 pour chaque produit acheté : son nom, la quantité achetée, le prix d'achat unitaire et le prix total de la ligne
 
