@@ -96,7 +96,8 @@ HAVING total_orders >= 3;
 SELECT ref_product, SUM(quantity) AS total_quantity_sold
 FROM product_order
 GROUP BY ref_product
-HAVING total_quantity_sold > 20;
+HAVING total_quantity_sold > 20
+ORDER BY total_quantity_sold DESC;
 
 -- 14/ Récupérer la référence et le chiffre d'affaire du produit qui a généré le plus de chiffre d'affaire
 
