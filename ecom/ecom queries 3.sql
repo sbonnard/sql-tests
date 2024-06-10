@@ -84,14 +84,6 @@ FROM product p
 LEFT JOIN product_order po USING(ref_product)
 GROUP BY ref_product;
 
--- SELECT ref_product, name_product
--- FROM product p
--- WHERE p.ref_product
--- NOT IN (
---     SELECT ref_product
---     FROM product_order
--- );
-
 -- 9/ Récupérer les noms des produits qui n'ont jamais été vendus
 -- à un prix aussi bas qu'aujourd'hui
 
