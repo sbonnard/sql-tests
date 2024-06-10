@@ -78,7 +78,10 @@ ORDER BY month_orders;
 
 -- 12/ Récupérer les identifiants des clients ayant passées au moins 3 commandes
 
-
+SELECT id_customer, COUNT(id_order) AS total_orders
+FROM orders
+GROUP BY id_customer
+HAVING total_orders >= 3;
 
 -- 13/ Récupérer les références des produits dont il a déjà été vendu plus de 20 exemplaires, triés par nombre d'exemplaires vendus décroissant
 
