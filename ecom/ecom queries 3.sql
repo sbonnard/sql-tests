@@ -16,7 +16,7 @@ WHERE o.id_customer = NULL;
 
 -- 3/ Récupérer pour la commande numéro 15 pour chaque produit acheté : son nom, la quantité achetée, le prix d'achat unitaire et le prix total de la ligne
 
-SELECT name_product, quantity, price, SUM(quantity * price) AS total_price
+SELECT id_order, name_product, quantity, price, SUM(quantity * price) AS total_price
 FROM orders o
     JOIN product_order po USING(id_order)
     JOIN product p USING (ref_product)
