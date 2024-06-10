@@ -24,6 +24,13 @@ NOT IN (
     FROM orders
 );
 
+-- OR BETTER 
+
+SELECT c.id_customer
+FROM customer c
+JOIN orders USING(id_customer)
+WHERE c.id_customer IS NULL;
+
 -- 3/ Récupérer pour la commande numéro 15 pour chaque produit acheté : son nom, la quantité achetée, le prix d'achat unitaire et le prix total de la ligne
 
 SELECT id_order, name_product, quantity, price, SUM(quantity * price) AS total_price
@@ -53,11 +60,22 @@ WHERE date_order LIKE '%2022-04%';
 -- 6/ Récupérer l'historique des commandes par ordre décroissant pour le client numéro 14
 -- en affichant le montant total de chaque commande
 
-
+SELECT id_order, c.id_customer, date_order, SUM(price_order * quantity) AS total_price
+FROM customer c
+    JOIN orders o USING(id_customer)
+    JOIN product_order USING(id_order)
+WHERE c.id_customer = 14
+GROUP BY id_order
+ORDER BY date_order DESC;
 
 -- 7/ Récupérer le nom et la quantité vendues pour chaque vin dont au moins 10 bouteilles ont été vendues
 
-
+SELECT ref_product, name_product, SUM(quantity) AS total_quantity
+FROM product p
+    JOIN product_order po USING(ref_product)
+WHERE p.ref_product = po.ref_product AND name_product LIKE "wine%"
+GROUP BY ref_product
+HAVING total_quantity >= 10;
 
 -- 8/ Récupérer le nom et le total de chiffre d'affaire de tous les produits (0.00 si le produit n'a pas été vendu)
 
