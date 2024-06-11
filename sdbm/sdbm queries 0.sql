@@ -18,7 +18,7 @@ ORDER BY purchase_price DESC LIMIT 3;
 
 SELECT continent_name, COUNT(id_country) AS all_countries_from
 FROM continent C
-    JOIN country co USING(id_continent)
+    JOIN country co USING (id_continent)
 GROUP BY id_continent
 ORDER BY all_countries_from DESC LIMIT 1;
 
