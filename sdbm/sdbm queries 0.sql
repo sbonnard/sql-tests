@@ -49,7 +49,7 @@ SELECT  brand_name, SUM(quantity) AS total_beer
 FROM brand
     JOIN article USING (id_brand)
     JOIN sale USING (id_article)
-GROUP BY id_article
+GROUP BY id_brand
 ORDER BY total_beer DESC LIMIT 1;
 
 
