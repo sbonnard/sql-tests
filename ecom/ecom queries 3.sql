@@ -108,12 +108,12 @@ GROUP BY id_order;
 
 -- 11/ Récupérer l'adresse email des clients ayant effectués plus de 300 euros de commande au total en 2021
 
-SELECT email, date_order, SUM(price_order * quantity) AS total_purchases
+SELECT email, SUM(price_order * quantity) AS total_purchases
 FROM product_order po
     JOIN orders o USING (id_order)
     JOIN customer c USING (id_customer)
 WHERE YEAR(date_order) = 2021
-GROUP BY id_order
+GROUP BY id_customer
 HAVING total_purchases > 300;
 
 -- 12/ Récupérer le nom et le prénom du plus gros acheteur de vin en quantité
@@ -132,7 +132,7 @@ ORDER BY total_wine DESC LIMIT 1;
 
 SELECT id_customer, email, MAX(date_order) AS last_order
 FROM customer c
-    JOIN orders o USING (id_customer)
+    LEFT JOIN orders o USING (id_customer)
 GROUP BY id_customer
 ORDER BY last_order DESC;
 
