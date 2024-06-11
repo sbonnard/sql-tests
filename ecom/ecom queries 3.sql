@@ -176,6 +176,14 @@ WHERE name_product = "Cheese - Brie, Triple Creme" AND price_order < (price * 0.
 
 -- BONUS.18/ Quel produit Shawna Knowller a acheté le plus souvent ?
 
-
+SELECT firstname, lastname, name_product, SUM(quantity) AS max_qty
+FROM customer c
+JOIN orders o USING (id_customer)
+JOIN product_order po USING (id_order)
+JOIN product p USING (ref_product)
+WHERE firstname = 'Shawna' AND lastname = 'Knowller'
+GROUP BY ref_product
+ORDER BY max_qty DESC LIMIT 1;
 
 -- BONUS.19/ Récupérer la liste les clients (nom et prénom) ayant acheté plusieurs fois le même produit, ainsi que le nom des produits concernés.
+
