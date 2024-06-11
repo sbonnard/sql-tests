@@ -39,6 +39,14 @@ GROUP BY id_ticket;
 
 -- 6 ● Quel est le nombre total de bières vendues jusqu'à présent ?
 
-
+SELECT SUM(quantity) AS total_beer
+FROM sale;
 
 -- 7 ● Quelle est la marque de bière la plus vendue (en termes de quantité) ?
+
+SELECT  brand_name, SUM(quantity) AS total_beer
+FROM brand
+    JOIN article USING (id_brand)
+    JOIN sale USING (id_article)
+GROUP BY id_article
+ORDER BY total_beer DESC LIMIT 1;
