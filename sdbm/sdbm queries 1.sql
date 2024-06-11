@@ -75,3 +75,9 @@ GROUP BY id_continent
 ORDER BY max_price, min_price DESC;
 
 -- 10/ Afficher le nombre total d'articles vendus pour chaque type de bière, en affichant le nom du type et le nombre total d'articles vendus.
+
+SELECT type_name, SUM(quantity) AS qty_sold
+FROM sale
+    JOIN article USING (id_article)
+    JOIN type USING (id_type)
+GROUP BY id_type;
