@@ -27,7 +27,8 @@ ORDER BY all_countries_from DESC LIMIT 1;
 SELECT brand_name, country_name
 FROM brand b
     JOIN country USING (id_country)
-WHERE brand_name = 'Heineken';
+WHERE brand_name = 'Heineken'
+GROUP BY id_country;
 
 -- 5 Combien de bières ont été vendues lors de chaque transaction ? Afficher les numéros de
 -- ticket, la date de ticket, et le nombre de bières.
