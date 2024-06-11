@@ -66,6 +66,12 @@ GROUP BY id_country;
 
 -- 9/ Afficher le prix d'achat le plus élevé et le prix d'achat le plus bas par continent, en précisant le nom du continent.
 
-
+SELECT continent_name, MAX(purchase_price) AS max_price, MIN(purchase_price) AS min_price
+FROM article
+    JOIN brand USING (id_brand)
+    JOIN country USING (id_country)
+    JOIN continent USING (id_continent)
+GROUP BY id_continent
+ORDER BY max_price, min_price DESC;
 
 -- 10/ Afficher le nombre total d'articles vendus pour chaque type de bière, en affichant le nom du type et le nombre total d'articles vendus.
