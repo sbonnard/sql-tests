@@ -90,10 +90,11 @@ GROUP BY ref_product;
 -- 9/ Récupérer les noms des produits qui n'ont jamais été vendus
 -- à un prix aussi bas qu'aujourd'hui
 
-SELECT ref_product, name_product, MIN(price_order)
+SELECT ref_product, name_product, price, MIN(price_order) AS min_price
 FROM product p
     JOIN product_order po USING (ref_product)
-GROUP BY ref_product;
+GROUP BY ref_product
+HAVING min_price > price;
 
 -- 10/ Récupérer pour toutes les commandes passées le 27 novembre 2021,
 -- le nom, le prénom, l'email du client et le montant total
