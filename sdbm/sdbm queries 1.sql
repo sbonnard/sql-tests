@@ -7,9 +7,8 @@ GROUP BY id_article;
 
 -- 2/ Afficher le nombre de bières vendues par pays, en affichant le nom du pays.
 
-SELECT country_name, SUM(quantity) AS qty_sold
-FROM sale
-    JOIN article USING (id_article)
+SELECT country_name, COUNT(id_article) AS qty_sold
+FROM article
     JOIN brand USING (id_brand)
     JOIN country USING (id_country)
 GROUP BY id_country;

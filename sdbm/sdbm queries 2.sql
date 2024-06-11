@@ -18,6 +18,11 @@ HAVING date_ = '2017-01-15';
 -- 3/ Quels sont les tickets émis du 15/01/2017 au 17/01/2017 ?
 -- Afficher le numéro de ticket et la date.
 
+SELECT id_ticket, DATE_FORMAT(ticket_date, "%Y-%m-%d") AS date_
+FROM ticket
+GROUP BY id_ticket
+HAVING ticket_date 
+BETWEEN date_ = '2017-01-15' AND '2017-01-17';
 
 -- 4/ Quels sont les articles (Code et nom uniquement) apparaissant sur un ticket à au moins 95 exemplaires.
 
