@@ -159,7 +159,7 @@ HAVING total_revenue > 100;
 -- 16/ Récupérer pour chaque mois la valeur du panier moyen
 -- (moyenne du total des commandes de la période)
 
-SELECT YEAR(date_order) AS year_, MONTH(date_order) AS month_, AVG(price_order * quantity) AS average_cart
+SELECT YEAR(date_order) AS year_, MONTH(date_order) AS month_, ROUND(AVG(price_order * quantity), 2) AS average_cart
 FROM product_order po
     JOIN orders USING (id_order)
 GROUP BY year_, month_
@@ -176,14 +176,14 @@ WHERE name_product = "Cheese - Brie, Triple Creme" AND price_order < (price * 0.
 
 -- BONUS.18/ Quel produit Shawna Knowller a acheté le plus souvent ?
 
-SELECT firstname, lastname, name_product, SUM(quantity) AS max_qty
+SELECT firstname, lastname, name_product
 FROM customer c
     JOIN orders o USING (id_customer)
     JOIN product_order po USING (id_order)
     JOIN product p USING (ref_product)
 WHERE firstname = 'Shawna' AND lastname = 'Knowller'
 GROUP BY ref_product
-ORDER BY max_qty DESC LIMIT 1;
+ORDER BY COUNT(id_order) DESC LIMIT 1;
 
 -- BONUS.19/ Récupérer la liste les clients (nom et prénom) ayant acheté plusieurs fois le même produit, ainsi que le nom des produits concernés.
 
