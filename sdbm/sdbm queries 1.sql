@@ -32,7 +32,10 @@ WHERE brand_name = 'Heineken';
 -- 5 ● Combien de bières ont été vendues lors de chaque transaction ? Afficher les numéros de
 -- ticket, la date de ticket, et le nombre de bières.
 
-
+SELECT id_ticket, ticket_date, SUM(quantity) AS total_beer
+FROM ticket t
+    JOIN sale USING (id_ticket)
+GROUP BY id_ticket;
 
 -- 6 ● Quel est le nombre total de bières vendues jusqu'à présent ?
 
