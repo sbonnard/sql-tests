@@ -78,13 +78,13 @@ HAVING total_quantity >= 10;
 
 SELECT ref_product, name_product, COALESCE(SUM(price_order * quantity), 0.00) AS total_price
 FROM product p
-LEFT JOIN product_order po USING(ref_product)
+    LEFT JOIN product_order po USING(ref_product)
 GROUP BY ref_product;
 
 -- OR FOR ONLY TWO PARAMETERS
 SELECT ref_product, name_product, IFNULL(SUM(price_order * quantity), 0.00) AS total_price
 FROM product p
-LEFT JOIN product_order po USING(ref_product)
+    LEFT JOIN product_order po USING(ref_product)
 GROUP BY ref_product;
 
 -- 9/ Récupérer les noms des produits qui n'ont jamais été vendus
@@ -92,7 +92,7 @@ GROUP BY ref_product;
 
 SELECT ref_product, name_product, MIN(price_order)
 FROM product p
-JOIN product_order po USING (ref_product)
+    JOIN product_order po USING (ref_product)
 GROUP BY ref_product;
 
 -- 10/ Récupérer pour toutes les commandes passées le 27 novembre 2021,
@@ -100,8 +100,8 @@ GROUP BY ref_product;
 
 SELECT date_order, lastname, firstname, email, SUM(price_order * quantity) AS total_price
 FROM product_order po
-JOIN orders o USING (id_order)
-JOIN customer c USING (id_customer)
+    JOIN orders o USING (id_order)
+    JOIN customer c USING (id_customer)
 WHERE YEAR(date_order) = 2021 AND MONTH(date_order) = 11 AND DAY(date_order) = 27
 GROUP BY id_order;
 
@@ -109,8 +109,8 @@ GROUP BY id_order;
 
 SELECT email, date_order, SUM(price_order * quantity) AS total_purchases
 FROM product_order po
-JOIN orders o USING (id_order)
-JOIN customer c USING (id_customer)
+    JOIN orders o USING (id_order)
+    JOIN customer c USING (id_customer)
 WHERE YEAR(date_order) = 2021
 GROUP BY id_order
 HAVING total_purchases > 300;
@@ -119,9 +119,9 @@ HAVING total_purchases > 300;
 
 SELECT lastname, firstname, SUM(quantity) AS total_wine
 FROM product p
-JOIN product_order po USING (ref_product)
-JOIN orders o USING (id_order)
-JOIN customer c USING (id_customer)
+    JOIN product_order po USING (ref_product)
+    JOIN orders o USING (id_order)
+    JOIN customer c USING (id_customer)
 WHERE name_product LIKE 'wine%'
 GROUP BY id_customer
 ORDER BY total_wine DESC LIMIT 1;
@@ -131,7 +131,7 @@ ORDER BY total_wine DESC LIMIT 1;
 
 SELECT id_customer, email, MAX(date_order) AS last_order
 FROM customer c
-JOIN orders o USING (id_customer)
+    JOIN orders o USING (id_customer)
 GROUP BY id_customer
 ORDER BY last_order DESC;
 
@@ -139,8 +139,8 @@ ORDER BY last_order DESC;
 
 SELECT YEAR(date_order) AS year_, MONTH(date_order) AS month_, SUM(price_order * quantity) AS total_revenue
 FROM product p
-JOIN product_order po USING (ref_product)
-JOIN orders o USING (id_order)
+    JOIN product_order po USING (ref_product)
+    JOIN orders o USING (id_order)
 WHERE name_product LIKE "cheese%"
 GROUP BY year_, month_
 ORDER BY year_, month_;
@@ -150,8 +150,8 @@ ORDER BY year_, month_;
 
 SELECT name_product, SUM(price_order * quantity) AS total_revenue
 FROM product p
-JOIN product_order po USING(ref_product)
-JOIN orders o USING (id_order)
+    JOIN product_order po USING(ref_product)
+    JOIN orders o USING (id_order)
 WHERE YEAR(date_order) = 2021 AND MONTH(date_order) = 12
 GROUP BY ref_product
 HAVING total_revenue > 100;
@@ -161,7 +161,7 @@ HAVING total_revenue > 100;
 
 SELECT YEAR(date_order) AS year_, MONTH(date_order) AS month_, AVG(price_order * quantity) AS average_cart
 FROM product_order po
-JOIN orders USING (id_order)
+    JOIN orders USING (id_order)
 GROUP BY year_, month_
 ORDER BY year_, month_;
 
@@ -169,21 +169,28 @@ ORDER BY year_, month_;
 
 SELECT email, date_order, name_product, price, price_order
 FROM customer c
-JOIN orders o USING (id_customer)
-JOIN product_order po USING (id_order)
-JOIN product p USING (ref_product)
+    JOIN orders o USING (id_customer)
+    JOIN product_order po USING (id_order)
+    JOIN product p USING (ref_product)
 WHERE name_product = "Cheese - Brie, Triple Creme" AND price_order < (price * 0.8);
 
 -- BONUS.18/ Quel produit Shawna Knowller a acheté le plus souvent ?
 
 SELECT firstname, lastname, name_product, SUM(quantity) AS max_qty
 FROM customer c
-JOIN orders o USING (id_customer)
-JOIN product_order po USING (id_order)
-JOIN product p USING (ref_product)
+    JOIN orders o USING (id_customer)
+    JOIN product_order po USING (id_order)
+    JOIN product p USING (ref_product)
 WHERE firstname = 'Shawna' AND lastname = 'Knowller'
 GROUP BY ref_product
 ORDER BY max_qty DESC LIMIT 1;
 
 -- BONUS.19/ Récupérer la liste les clients (nom et prénom) ayant acheté plusieurs fois le même produit, ainsi que le nom des produits concernés.
 
+SELECT lastname, firstname, name_product, SUM(quantity) AS total_qty
+FROM customer c
+    JOIN orders o USING (id_customer)
+    JOIN product_order po USING (id_order)
+    JOIN product p USING (ref_product)
+GROUP BY ref_product, id_customer
+HAVING total_qty > 1;
