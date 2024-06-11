@@ -25,6 +25,13 @@ ORDER BY qty_sold DESC;
 
 -- 4/ Afficher la quantité totale de bières vendues par continent, en affichant le nom du continent.
 
+SELECT continent_name, SUM(quantity) AS qty_sold
+FROM sale
+    JOIN article USING (id_article)
+    JOIN brand USING (id_brand)
+    JOIN country USING (id_country)
+    JOIN continent USING (id_continent)
+GROUP BY id_continent;
 
 -- 5/ Afficher la moyenne des prix d'achat des articles par type, en indiquant le nom du type et la moyenne des prix d'achat.
 
