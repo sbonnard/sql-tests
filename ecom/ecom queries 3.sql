@@ -117,7 +117,14 @@ HAVING total_purchases > 300;
 
 -- 12/ Récupérer le nom et le prénom du plus gros acheteur de vin en quantité
 
-
+SELECT lastname, firstname, SUM(quantity) AS total_wine
+FROM product p
+JOIN product_order po USING (ref_product)
+JOIN orders o USING (id_order)
+JOIN customer c USING (id_customer)
+WHERE name_product LIKE 'wine%'
+GROUP BY id_customer
+ORDER BY total_wine DESC LIMIT 1;
 
 -- 13/ Récupérer les emails de tous les clients et aussi leur dernière date de commande
 -- s'ils ont déjà passé commande
