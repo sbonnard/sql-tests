@@ -159,4 +159,8 @@ HAVING total_revenue > 100;
 -- 16/ Récupérer pour chaque mois la valeur du panier moyen
 -- (moyenne du total des commandes de la période)
 
-
+SELECT YEAR(date_order) AS year_, MONTH(date_order) AS month_, AVG(price_order * quantity) AS average_cart
+FROM product_order po
+JOIN orders USING (id_order)
+GROUP BY year_, month_
+ORDER BY year_, month_;
