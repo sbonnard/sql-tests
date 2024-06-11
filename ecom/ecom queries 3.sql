@@ -181,7 +181,8 @@ FROM customer c
     JOIN orders o USING (id_customer)
     JOIN product_order po USING (id_order)
     JOIN product p USING (ref_product)
-WHERE name_product = "Cheese - Brie, Triple Creme" AND price_order < (price * 0.8);
+WHERE name_product = "Cheese - Brie, Triple Creme" AND price_order < (price * 0.8)
+GROUP BY id_customer;
 
 -- BONUS.18/ Quel produit Shawna Knowller a acheté le plus souvent ?
 
@@ -196,7 +197,7 @@ ORDER BY COUNT(id_order) DESC LIMIT 1;
 
 -- BONUS.19/ Récupérer la liste les clients (nom et prénom) ayant acheté plusieurs fois le même produit, ainsi que le nom des produits concernés.
 
-SELECT lastname, firstname, name_product, SUM(quantity) AS total_qty
+SELECT lastname, firstname, name_product, COUNT(id_order) AS total_qty
 FROM customer c
     JOIN orders o USING (id_customer)
     JOIN product_order po USING (id_order)
