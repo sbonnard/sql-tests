@@ -58,7 +58,11 @@ GROUP BY id_brand;
 
 -- 8/ Afficher le prix d'achat moyen des articles pour chaque pays, en indiquant le nom du pays et le prix d'achat moyen.
 
-
+SELECT country_name, ROUND(AVG(purchase_price), 2) AS average_price
+FROM article
+    JOIN brand USING (id_brand)
+    JOIN country USING (id_country)
+GROUP BY id_country;
 
 -- 9/ Afficher le prix d'achat le plus élevé et le prix d'achat le plus bas par continent, en précisant le nom du continent.
 
