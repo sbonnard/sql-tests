@@ -50,11 +50,18 @@ GROUP BY id_color;
 
 -- 7/ Afficher le volume total des ventes réalisées pour chaque marque, trié par ordre décroissant.
 
+SELECT brand_name, SUM(volume) AS total_vol, SUM(quantity) AS qty_sold
+FROM brand
+    JOIN article USING (id_brand)
+    JOIN sale USING (id_article)
+GROUP BY id_brand;
 
 -- 8/ Afficher le prix d'achat moyen des articles pour chaque pays, en indiquant le nom du pays et le prix d'achat moyen.
 
 
+
 -- 9/ Afficher le prix d'achat le plus élevé et le prix d'achat le plus bas par continent, en précisant le nom du continent.
+
 
 
 -- 10/ Afficher le nombre total d'articles vendus pour chaque type de bière, en affichant le nom du type et le nombre total d'articles vendus.
