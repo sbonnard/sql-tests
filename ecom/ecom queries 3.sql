@@ -142,9 +142,17 @@ SELECT YEAR(date_order) AS year_, MONTH(date_order) AS month_, SUM(price_order *
 FROM product p
     JOIN product_order po USING (ref_product)
     JOIN orders o USING (id_order)
-WHERE name_product LIKE "cheese%"
+WHERE name_product LIKE "%cheese%"
 GROUP BY year_, month_
 ORDER BY year_, month_;
+
+SELECT DATE_FORMAT(date_order, "%Y-%m") date_, SUM(price_order * quantity) AS total_revenue
+FROM product p
+    JOIN product_order po USING (ref_product)
+    JOIN orders o USING (id_order)
+WHERE name_product LIKE "%cheese%"
+GROUP BY date_
+ORDER BY date_;
 
 -- 15/ Récupérer le nom et le chiffre d'affaire total de décembre 2021
 -- des produits ayant généré plus 100 € de chiffre d'affaire sur ce mois.
