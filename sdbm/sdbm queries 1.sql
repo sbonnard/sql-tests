@@ -11,7 +11,8 @@ SELECT country_name, COUNT(id_article) AS qty_sold
 FROM article
     JOIN brand USING (id_brand)
     JOIN country USING (id_country)
-GROUP BY id_country;
+GROUP BY id_country
+ORDER BY qty_sold DESC;
 
 -- 3/ Afficher la quantité totale de bières vendues par marque, avec le nom de chaque marque, triée par ordre décroissant.
 
