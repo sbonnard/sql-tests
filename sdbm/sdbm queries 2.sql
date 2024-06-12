@@ -158,6 +158,12 @@ WHERE continent_name = 'Afrique';
 -- Afficher l'année, numéro de ticket, montant total à payer
 --     En sachant que l'on applique un taux de TVA de 20% au montant total hors taxe de chaque ticket.
 
+SELECT id_ticket, YEAR(ticket_date) AS year_, SUM(quantity * purchase_price) AS total_price_HT, SUM(quantity * purchase_price) * 1.2 AS total_price_TTC
+FROM ticket
+    JOIN sale USING (id_ticket)
+    JOIN article USING (id_article)
+GROUP BY id_ticket
+ORDER BY total_price_TTC DESC;
 
 -- 18/ Donner le C.A. par année.
 -- Afficher les années et Total HT
