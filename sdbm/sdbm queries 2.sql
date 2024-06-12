@@ -26,6 +26,12 @@ BETWEEN date_ = '2017-01-15' AND '2017-01-17';
 
 -- 4/ Quels sont les articles (Code et nom uniquement) apparaissant sur un ticket à au moins 95 exemplaires.
 
+SELECT id_article, article_name, SUM(quantity)
+FROM article    
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+GROUP BY id_article, id_ticket
+HAVING SUM(quantity) >= 95;
 
 -- 5/ Quels sont les tickets émis au mois de mars 2017 ?
 -- Afficher le numéro de ticket et la date.
