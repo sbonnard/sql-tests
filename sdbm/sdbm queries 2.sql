@@ -8,10 +8,9 @@ WHERE id_article = 500;
 -- 2/ Quels sont les tickets du 15/01/2017 ?
 -- Afficher le numéro de ticket et la date.
 
-SELECT id_ticket, DATE_FORMAT(ticket_date, "%Y-%m-%d") AS date_
+SELECT id_ticket, ticket_date
 FROM ticket
-GROUP BY id_ticket
-HAVING date_ = '2017-01-15';
+WHERE ticket_date = '2017-01-15';
 
 -- 3/ Quels sont les tickets émis du 15/01/2017 au 17/01/2017 ?
 -- Afficher le numéro de ticket et la date.
