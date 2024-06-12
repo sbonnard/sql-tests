@@ -119,16 +119,21 @@ ORDER BY total_qty_ticket DESC;
 -- 13/ Lister chaque ticket pour lequel la quantité totale d'articles vendus est supérieure à 500. On exclura du total, les ventes de 50 articles et plus.
 -- classer par quantité décroissante
 
--- SELECT id_ticket, SUM(quantity) AS total_qty_ticket
--- FROM sale
---     JOIN ticket USING (id_ticket)
--- GROUP BY id_ticket, id_sale
--- HAVING total_qty_ticket > 500 AND total_qty_ticket < 50
--- ORDER BY total_qty_ticket DESC;
+SELECT id_ticket, quantity, SUM(quantity) AS total_qty_ticket
+FROM sale
+    JOIN ticket USING (id_ticket)
+GROUP BY id_ticket
+HAVING total_qty_ticket > 500 AND quantity < 50
+ORDER BY total_qty_ticket DESC;
 
 -- 14/ Lister les bières de type ‘Trappiste'.
 -- Afficher id, nom de la bière, volume et titrage
 
+SELECT id_article, article_name, volume, alcohol
+FROM article
+    JOIN type USING (id_type)
+WHERE type_name = 'Trappiste'
+GROUP BY id_article;
 
 -- 15/ Lister les marques du continent ‘Afrique'.
 -- Afficher id et nom de marque, nom du continent
