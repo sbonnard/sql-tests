@@ -14,9 +14,14 @@ WHERE (id_type, id_color) IN (
     WHERE id_article = 142
 )
 
--- 2/ Lister les quantités vendues de chaque article pour les années 2014, 2015,2016 et 2017.
+-- 2/ Lister les quantités vendues de chaque article pour les années 2014, 2015, 2016 et 2017.
 
-
+SELECT id_article, article_name, SUM(quantity) AS total_qty, YEAR(ticket_date) AS year_
+FROM article
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+GROUP BY id_article, year_
+HAVING year_ IN (2014, 2015, 2016, 2017);
 
 -- 3/ Lister les tickets sur lesquels apparaissent un des articles apparaissant aussi sur le ticket 20175123.
 
