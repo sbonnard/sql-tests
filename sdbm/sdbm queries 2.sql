@@ -49,12 +49,17 @@ SELECT id_ticket, ticket_date
 FROM ticket
     JOIN sale USING (id_ticket)
 GROUP BY id_ticket
-HAVING ticket_date BETWEEN "2017-04-01" AND "2017-06-30"
+HAVING ticket_date BETWEEN '2017-04-01' AND '2017-06-30'
 ORDER BY ticket_date DESC;
 
 -- 7/ Quels sont les tickets émis au mois de mars et juillet 2017 ?
 -- Afficher le numéro de ticket et la date.
 
+SELECT id_ticket, DATE_FORMAT(ticket_date, '%Y-%m') AS date_
+FROM ticket
+    JOIN sale USING (id_ticket)
+GROUP BY id_ticket
+HAVING date_ = '2017-03' OR date_ = '2017-07';
 
 -- 8/ Afficher la liste de toutes les bières classée par couleur.
 -- Afficher code et nom de bière, nom de la couleur
