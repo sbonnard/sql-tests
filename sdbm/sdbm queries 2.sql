@@ -28,7 +28,7 @@ FROM article
 GROUP BY id_article, id_ticket
 HAVING SUM(quantity) >= 95;
 
--- OR BETTER 
+-- OR WAY BETTER 
 
 SELECT id_article, article_name
 FROM article    
@@ -39,29 +39,23 @@ GROUP BY id_article;
 -- 5/ Quels sont les tickets émis au mois de mars 2017 ?
 -- Afficher le numéro de ticket et la date.
 
-SELECT id_ticket, DATE_FORMAT(ticket_date, "%Y-%m") AS date_ticket
+SELECT id_ticket, ticket_date
 FROM ticket
-    JOIN sale USING (id_ticket)
-GROUP BY id_ticket
-HAVING date_ticket = '2017-03';
+WHERE DATE_FORMAT(ticket_date, '%Y-%m') = '2017-03';
 
 -- 6/ Quels sont les tickets émis au deuxième trimestre 2017 ?
 -- Afficher le numéro de ticket et la date.
 
 SELECT id_ticket, ticket_date
 FROM ticket
-    JOIN sale USING (id_ticket)
-GROUP BY id_ticket
-HAVING ticket_date BETWEEN '2017-04-01' AND '2017-06-30'
+WHERE ticket_date BETWEEN '2017-04-01' AND '2017-06-30'
 ORDER BY ticket_date DESC;
 
 -- OR BETTER
 
 SELECT id_ticket, ticket_date
 FROM ticket
-    JOIN sale USING (id_ticket)
-GROUP BY id_ticket
-HAVING QUARTER(ticket_date) = 2 AND YEAR(ticket_date) = '2017'
+WHERE QUARTER(ticket_date) = 2 AND YEAR(ticket_date) = '2017'
 ORDER BY ticket_date DESC;
 
 -- 7/ Quels sont les tickets émis au mois de mars et juillet 2017 ?
@@ -69,33 +63,36 @@ ORDER BY ticket_date DESC;
 
 SELECT id_ticket, DATE_FORMAT(ticket_date, '%Y-%m') AS date_
 FROM ticket
-    JOIN sale USING (id_ticket)
-GROUP BY id_ticket
-HAVING date_ = '2017-03' OR date_ = '2017-07';
+WHERE DATE_FORMAT(ticket_date, '%Y-%m') = '2017-03' 
+OR DATE_FORMAT(ticket_date, '%Y-%m') = '2017-07';
+
+-- OR 
+
+SELECT id_ticket, DATE_FORMAT(ticket_date, '%Y-%m') AS date_
+FROM ticket
+WHERE YEAR(ticket_date) = 2017
+AND MONTH(ticket_date) IN (3, 7);
 
 -- 8/ Afficher la liste de toutes les bières classée par couleur.
 -- Afficher code et nom de bière, nom de la couleur
 
-SELECT id_article, article_name, color_name
+SELECT id_article, article_name, IFNULL(color_name, '-Pas de couleur-')
 FROM article
-    JOIN color USING (id_color)
-GROUP BY id_article;
+    LEFT JOIN color USING (id_color)
+ORDER BY color_name;
 
 -- 9/ Afficher la liste des bières n'ayant pas de couleur. 
 -- Afficher le code et le nom
 
-SELECT id_article, article_name, color_name
+SELECT id_article, article_name
 FROM article
-    LEFT JOIN color USING (id_color)
-GROUP BY id_article
-HAVING color_name IS NULL;
+WHERE id_color IS NULL;
 
 -- 10/ Lister pour chaque ticket la quantité totale d'articles vendus (en nombre).
 -- Classer par quantité décroissante
 
 SELECT id_ticket, SUM(quantity) AS total_qty_ticket
 FROM sale
-    JOIN ticket USING (id_ticket)
 GROUP BY id_ticket
 ORDER BY total_qty_ticket DESC;
 
@@ -104,9 +101,8 @@ ORDER BY total_qty_ticket DESC;
 
 SELECT id_ticket, SUM(quantity) AS total_qty_ticket
 FROM sale
-    JOIN ticket USING (id_ticket)
 GROUP BY id_ticket
-HAVING SUM(quantity) < 50
+HAVING total_qty_ticket < 50
 ORDER BY total_qty_ticket ASC;
 
 -- 12/ Lister chaque ticket pour lequel la quantité totale d'articles vendus est supérieure à 500.
@@ -114,7 +110,6 @@ ORDER BY total_qty_ticket ASC;
 
 SELECT id_ticket, SUM(quantity) AS total_qty_ticket
 FROM sale
-    JOIN ticket USING (id_ticket)
 GROUP BY id_ticket
 HAVING SUM(quantity) > 500
 ORDER BY total_qty_ticket DESC;
@@ -124,9 +119,9 @@ ORDER BY total_qty_ticket DESC;
 
 SELECT id_ticket, SUM(quantity) AS total_qty_ticket
 FROM sale
-    JOIN ticket USING (id_ticket)
+WHERE quantity < 50
 GROUP BY id_ticket
-HAVING total_qty_ticket > 500 AND COUNT(id_article) < 50
+HAVING total_qty_ticket > 500
 ORDER BY total_qty_ticket DESC;
 
 -- 14/ Lister les bières de type ‘Trappiste'.
@@ -135,8 +130,7 @@ ORDER BY total_qty_ticket DESC;
 SELECT id_article, article_name, volume, alcohol
 FROM article
     JOIN type USING (id_type)
-WHERE type_name = 'Trappiste'
-GROUP BY id_article;
+WHERE type_name = 'Trappiste';
 
 -- 15/ Lister les marques du continent ‘Afrique'.
 -- Afficher id et nom de marque, nom du continent
@@ -180,10 +174,9 @@ GROUP BY year_;
 -- 19/ Lister les quantités vendues de chaque article pour l'année 2017.
 -- Afficher id et nom de l'article, quantité vendue
 
-SELECT YEAR(ticket_date) AS year_, id_article, article_name, SUM(quantity)
+SELECT YEAR(ticket_date) AS year_, id_article, article_name, SUM(quantity) AS total
 FROM article
     JOIN sale USING (id_article)
     JOIN ticket USING (id_ticket)
-GROUP BY id_article, year_
-HAVING year_ = '2017'
-ORDER BY id_article ASC;
+WHERE YEAR(ticket_date) = 2017
+GROUP BY id_article, year_;
