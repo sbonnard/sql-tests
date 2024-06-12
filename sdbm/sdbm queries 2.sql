@@ -138,6 +138,11 @@ GROUP BY id_article;
 -- 15/ Lister les marques du continent ‘Afrique'.
 -- Afficher id et nom de marque, nom du continent
 
+SELECT id_brand, brand_name, continent_name
+FROM brand
+    JOIN country USING (id_country)
+    JOIN continent USING (id_continent)
+WHERE continent_name = 'Afrique';
 
 -- 16/ Lister les bières du continent ‘Afrique'.
 -- Afficher ID, Nom et volume
