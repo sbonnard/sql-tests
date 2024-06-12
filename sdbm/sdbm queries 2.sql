@@ -52,6 +52,15 @@ GROUP BY id_ticket
 HAVING ticket_date BETWEEN '2017-04-01' AND '2017-06-30'
 ORDER BY ticket_date DESC;
 
+-- OR BETTER
+
+SELECT id_ticket, ticket_date
+FROM ticket
+    JOIN sale USING (id_ticket)
+GROUP BY id_ticket
+HAVING QUARTER(ticket_date) = 2 AND YEAR(ticket_date) = '2017'
+ORDER BY ticket_date DESC;
+
 -- 7/ Quels sont les tickets émis au mois de mars et juillet 2017 ?
 -- Afficher le numéro de ticket et la date.
 
@@ -110,7 +119,12 @@ ORDER BY total_qty_ticket DESC;
 -- 13/ Lister chaque ticket pour lequel la quantité totale d'articles vendus est supérieure à 500. On exclura du total, les ventes de 50 articles et plus.
 -- classer par quantité décroissante
 
-
+-- SELECT id_ticket, SUM(quantity) AS total_qty_ticket
+-- FROM sale
+--     JOIN ticket USING (id_ticket)
+-- GROUP BY id_ticket, id_sale
+-- HAVING total_qty_ticket > 500 AND total_qty_ticket < 50
+-- ORDER BY total_qty_ticket DESC;
 
 -- 14/ Lister les bières de type ‘Trappiste'.
 -- Afficher id, nom de la bière, volume et titrage
