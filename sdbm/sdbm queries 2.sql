@@ -36,6 +36,11 @@ HAVING SUM(quantity) >= 95;
 -- 5/ Quels sont les tickets émis au mois de mars 2017 ?
 -- Afficher le numéro de ticket et la date.
 
+SELECT id_ticket, DATE_FORMAT(ticket_date, "%Y-%m") AS date_ticket
+FROM ticket
+    JOIN sale USING (id_ticket)
+GROUP BY id_ticket
+HAVING date_ticket = '2017-03';
 
 -- 6/ Quels sont les tickets émis au deuxième trimestre 2017 ?
 -- Afficher le numéro de ticket et la date.
