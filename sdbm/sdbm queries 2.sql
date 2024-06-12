@@ -2,9 +2,7 @@
 -- Afficher le numéro de ticket uniquement.
 
 SELECT id_ticket
-FROM ticket
-    JOIN sale USING (id_ticket)
-    JOIN article USING (id_article)
+FROM sale
 WHERE id_article = 500;
 
 -- 2/ Quels sont les tickets du 15/01/2017 ?
@@ -119,11 +117,11 @@ ORDER BY total_qty_ticket DESC;
 -- 13/ Lister chaque ticket pour lequel la quantité totale d'articles vendus est supérieure à 500. On exclura du total, les ventes de 50 articles et plus.
 -- classer par quantité décroissante
 
-SELECT id_ticket, quantity, SUM(quantity) AS total_qty_ticket
+SELECT id_ticket, SUM(quantity) AS total_qty_ticket
 FROM sale
     JOIN ticket USING (id_ticket)
 GROUP BY id_ticket
-HAVING total_qty_ticket > 500 AND quantity < 50
+HAVING total_qty_ticket > 500 AND COUNT(id_article) < 50
 ORDER BY total_qty_ticket DESC;
 
 -- 14/ Lister les bières de type ‘Trappiste'.
