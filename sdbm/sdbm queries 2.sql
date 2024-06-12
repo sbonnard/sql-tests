@@ -64,6 +64,10 @@ HAVING date_ = '2017-03' OR date_ = '2017-07';
 -- 8/ Afficher la liste de toutes les bières classée par couleur.
 -- Afficher code et nom de bière, nom de la couleur
 
+SELECT id_article, article_name, color_name
+FROM article
+    JOIN color USING (id_color)
+GROUP BY id_article;
 
 -- 9/ Afficher la liste des bières n'ayant pas de couleur. 
 -- Afficher le code et le nom
