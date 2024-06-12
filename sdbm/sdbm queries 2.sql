@@ -147,6 +147,12 @@ WHERE continent_name = 'Afrique';
 -- 16/ Lister les bières du continent ‘Afrique'.
 -- Afficher ID, Nom et volume
 
+SELECT id_article, article_name, volume, continent_name
+FROM article
+    JOIN brand USING (id_brand)
+    JOIN country USING (id_country)
+    JOIN continent USING (id_continent)
+WHERE continent_name = 'Afrique';
 
 -- 17/ Lister les tickets classés par montant décroissant.
 -- Afficher l'année, numéro de ticket, montant total à payer
