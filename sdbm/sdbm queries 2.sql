@@ -176,3 +176,11 @@ GROUP BY year_;
 
 -- 19/ Lister les quantités vendues de chaque article pour l'année 2017.
 -- Afficher id et nom de l'article, quantité vendue
+
+SELECT YEAR(ticket_date) AS year_, id_article, article_name, SUM(quantity)
+FROM article
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+GROUP BY id_article, year_
+HAVING year_ = '2017'
+ORDER BY id_article ASC;
