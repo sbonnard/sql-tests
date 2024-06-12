@@ -72,7 +72,11 @@ GROUP BY id_article;
 -- 9/ Afficher la liste des bières n'ayant pas de couleur. 
 -- Afficher le code et le nom
 
-
+SELECT id_article, article_name, color_name
+FROM article
+    LEFT JOIN color USING (id_color)
+GROUP BY id_article
+HAVING color_name IS NULL;
 
 -- 10/ Lister pour chaque ticket la quantité totale d'articles vendus (en nombre).
 -- Classer par quantité décroissante
