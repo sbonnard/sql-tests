@@ -168,6 +168,11 @@ ORDER BY total_price_TTC DESC;
 -- 18/ Donner le C.A. par année.
 -- Afficher les années et Total HT
 
+SELECT YEAR(ticket_date) AS year_, SUM(quantity * purchase_price) AS total_price_HT
+FROM ticket
+    JOIN sale USING (id_ticket)
+    JOIN article USING (id_article)
+GROUP BY year_;
 
 -- 19/ Lister les quantités vendues de chaque article pour l'année 2017.
 -- Afficher id et nom de l'article, quantité vendue
