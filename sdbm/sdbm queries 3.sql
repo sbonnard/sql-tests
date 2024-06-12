@@ -25,7 +25,13 @@ HAVING year_ IN (2014, 2015, 2016, 2017);
 
 -- 3/ Lister les tickets sur lesquels apparaissent un des articles apparaissant aussi sur le ticket 20175123.
 
-
+SELECT id_ticket
+FROM sale
+WHERE id_article IN (
+        SELECT id_article
+        FROM sale
+        WHERE id_ticket = 20175123
+);
 
 -- 4/ Donner pour chaque Type de bière, la bière la plus vendue en 2017. (Classer par quantité décroissante)
 
