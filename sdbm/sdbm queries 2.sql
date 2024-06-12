@@ -81,7 +81,11 @@ HAVING color_name IS NULL;
 -- 10/ Lister pour chaque ticket la quantité totale d'articles vendus (en nombre).
 -- Classer par quantité décroissante
 
-
+SELECT id_ticket, SUM(quantity) AS total_qty_ticket
+FROM sale
+    JOIN ticket USING (id_ticket)
+GROUP BY id_ticket
+ORDER BY total_qty_ticket DESC;
 
 -- 11/ Lister chaque ticket pour lequel la quantité totale d'articles vendus est inférieure à 50.
 -- Classer par quantité croissante
