@@ -90,7 +90,12 @@ ORDER BY total_qty_ticket DESC;
 -- 11/ Lister chaque ticket pour lequel la quantité totale d'articles vendus est inférieure à 50.
 -- Classer par quantité croissante
 
-
+SELECT id_ticket, SUM(quantity) AS total_qty_ticket
+FROM sale
+    JOIN ticket USING (id_ticket)
+GROUP BY id_ticket
+HAVING SUM(quantity) < 50
+ORDER BY total_qty_ticket ASC;
 
 -- 12/ Lister chaque ticket pour lequel la quantité totale d'articles vendus est supérieure à 500.
 -- Classer par quantité décroissante
