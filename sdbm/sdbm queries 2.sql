@@ -45,6 +45,12 @@ HAVING date_ticket = '2017-03';
 -- 6/ Quels sont les tickets émis au deuxième trimestre 2017 ?
 -- Afficher le numéro de ticket et la date.
 
+SELECT id_ticket, ticket_date
+FROM ticket
+    JOIN sale USING (id_ticket)
+GROUP BY id_ticket
+HAVING ticket_date BETWEEN "2017-04-01" AND "2017-06-30"
+ORDER BY ticket_date DESC;
 
 -- 7/ Quels sont les tickets émis au mois de mars et juillet 2017 ?
 -- Afficher le numéro de ticket et la date.
