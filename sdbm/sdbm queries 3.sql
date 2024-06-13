@@ -34,30 +34,20 @@ WHERE id_article IN (
 
 -- 4/ Donner pour chaque Type de bière, la bière la plus vendue en 2017. (Classer par quantité décroissante)
 
-SELECT id_type, type_name, article_name, SUM(quantity)
-FROM type
+SELECT id_article, article_name, type_name, SUM(quantity) AS total_qty
+FROM type t
     JOIN article USING (id_type)
     JOIN sale USING (id_article)
     JOIN ticket USING (id_ticket)
-WHERE YEAR(ticket_date) = 2017
-GROUP BY id_article
-ORDER BY SUM(quantity) DESC;
-
-
-SELECT id_type, type_name, article_name, SUM(quantity)
-FROM type
-    JOIN article USING (id_type)
-    JOIN sale USING (id_article)
-    JOIN ticket USING (id_ticket)
-    WHERE YEAR(ticket_date) = 2017 IN (
-        SELECT id_type
+WHERE ticket_date IN (
+        SELECT ticket_date
         FROM type
             JOIN article USING (id_type)
             JOIN sale USING (id_article)
-        WHERE MAX(SUM(quantity))
-    )
-    GROUP BY id_article
-    ORDER BY SUM(quantity) DESC;
+            JOIN ticket USING (id_ticket)
+        WHERE YEAR(ticket_date) = 2017 AND id_type = t.id_type
+)
+GROUP BY id_article, id_type;
 
 -- 5/ Donner la liste des bières qui n'ont pas été vendues en 2014 ni en 2015. (Id, nom et volume)
 
