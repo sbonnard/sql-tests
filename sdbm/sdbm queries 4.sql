@@ -41,14 +41,20 @@ WHERE country_name = 'Allemagne' AND id_ticket IN (
         JOIN article USING (id_brand)
         JOIN sale USING (id_article)
     WHERE country_name = 'France' 
-    AND id_ticket = s.id_ticket
 )
 GROUP BY id_article
 ORDER BY id_article;
 
 -- 4/ Récupérer la liste des bières pour lequelles les ventes ont agumentées entre 2015 et 2016
 
-
+SELECT id_article, article_name, YEAR(ticket_date) AS year_
+FROM article
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE YEAR(ticket_date) IN (2015, 2016)
+GROUP BY id_article, year_
+HAVING (SUM(quantity) AND year_ = 2015) < (SUM(quantity) AND year_ = 2016)
+ORDER BY id_article;
 
 -- 5/ Récupérer les bières pour lesquelles le volume de bières
 -- vendus est d'au moins 200 litres pour toutes les années
