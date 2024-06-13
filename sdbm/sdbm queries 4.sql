@@ -18,6 +18,13 @@ WHERE alcohol = (
 -- 2/ Récupérer le volume de bières vendu pour chaque mois et pour chaque type de bière
 -- classés par années, mois et type de bière
 
+SELECT YEAR(ticket_date) AS year_, MONTH(ticket_date) AS month_, SUM(volume) / 100 AS volume_litres, id_type, type_name
+FROM ticket
+    JOIN sale USING (id_ticket)
+    JOIN article USING (id_article)
+    JOIN type USING (id_type)
+GROUP BY id_type, year_, month_
+ORDER BY id_type ASC;
 
 -- 3/ Récupérer le nom et le volume des bières allemandes achetées en même temps que des bières françaises
 -- classés par nom de bière
