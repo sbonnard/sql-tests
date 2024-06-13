@@ -92,14 +92,14 @@ SELECT id_type, type_name, id_article, article_name,
         JOIN ticket USING (id_ticket)
     WHERE YEAR(ticket_date) = 2016
     GROUP BY s.id_article
-    ORDER BY best_seller DESC LIMIT 1) AS best_seller,
+    ORDER BY best_seller) AS best_seller,
     
     (SELECT SUM(quantity) AS least_sold
     FROM sale
         JOIN ticket USING (id_ticket)
     WHERE YEAR(ticket_date) = 2016
     GROUP BY s.id_article
-    ORDER BY least_sold ASC LIMIT 1) AS least_sold
+    ORDER BY least_sold) AS least_sold
 
     FROM type
     JOIN article USING (id_type)
@@ -132,8 +132,34 @@ ORDER BY least_sold ASC LIMIT 1;
 
 -- 8/ Donner pour toutes les couleurs de bières la plus vendue pour chacune des années 2015, 2016 et 2017 
 
+SELECT id_color, color_name, 
+    (SELECT SUM(quantity) AS best_seller
+    FROM sale
+        JOIN ticket USING (id_ticket)
+    WHERE YEAR(ticket_date) = 2016
+    GROUP BY s.id_article
+    ORDER BY best_seller DESC LIMIT 1) AS best_seller
+FROM color
+    JOIN article USING (id_color)
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE years IN (2015, 2016, 2017)
+GROUP BY id_color;
 
-
+SELECT ticket_date, id_color, color_name, SUM(quantity) AS best_seller
+FROM color
+    JOIN article USING (id_color)
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE YEAR(ticket_date) IN (2015, 2016, 2017) AND SUM(quantity) IN (
+    SELECT SUM(quantity) AS best_seller
+    FROM sale
+        JOIN ticket USING (id_ticket)
+    GROUP BY s.id_article
+    -- ORDER BY best_seller DESC LIMIT 1
+)
+GROUP BY id_color;
+    
 -- 9/ Lister les marques de bières dont le volume total vendu (en litres) en 2015 est supérieur à celui de Heineken.
 
 
