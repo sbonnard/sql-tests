@@ -18,7 +18,7 @@ WHERE alcohol = (
 -- 2/ Récupérer le volume de bières vendu pour chaque mois et pour chaque type de bière
 -- classés par années, mois et type de bière
 
-SELECT YEAR(ticket_date) AS year_, MONTH(ticket_date) AS month_, SUM(volume) / 100 AS volume_litres, id_type, type_name
+SELECT YEAR(ticket_date) AS year_, MONTH(ticket_date) AS month_, SUM(volume * quantity) / 100 AS volume_litres, id_type, type_name
 FROM ticket
     JOIN sale USING (id_ticket)
     JOIN article USING (id_article)
@@ -59,7 +59,13 @@ ORDER BY id_article;
 -- 5/ Récupérer les bières pour lesquelles le volume de bières
 -- vendus est d'au moins 200 litres pour toutes les années
 
-
+SELECT YEAR(ticket_date) AS year_, id_article, article_name, SUM(volume * quantity) / 100 AS volume_litres
+FROM article
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+GROUP BY id_article, year_
+HAVING volume_litres >= 200
+ORDER BY id_article, year_;
 
 -- 6/ Récupérer pour chaque pays la ou les marques de bière dont le degrès d'alcool moyen est le plus élevé en affichant le degré d'alcool moyen
 
