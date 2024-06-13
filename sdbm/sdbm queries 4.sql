@@ -1,7 +1,19 @@
 -- 1/ Récupérer toutes les bières les plus alcoolisés de chaque continent
--- afficher le nom du contient , le nom de la bière, le degrès d'alcool et le volume 
+-- afficher le nom du continent , le nom de la bière, le degrès d'alcool et le volume 
 
-
+SELECT continent_name, article_name, alcohol, volume
+FROM continent c
+    JOIN country co USING (id_continent)
+    JOIN brand b USING (id_country)
+    JOIN article a USING (id_brand)
+WHERE alcohol = (
+        SELECT MAX(alcohol)
+        FROM continent c2
+            JOIN country co2 USING (id_continent)
+            JOIN brand b2 USING (id_country)
+            JOIN article a2 USING (id_brand)
+        WHERE c2.id_continent = c.id_continent
+    );
 
 -- 2/ Récupérer le volume de bières vendu pour chaque mois et pour chaque type de bière
 -- classés par années, mois et type de bière
