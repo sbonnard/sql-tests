@@ -85,7 +85,50 @@ HAVING AVG(alcohol) = (
 
 -- 7/ Donner pour chaque type de bière, la bière la plus vendue et la bière la moins vendue en 2016
 
+SELECT id_type, type_name, id_article, article_name, 
+   
+    (SELECT SUM(quantity) AS best_seller
+    FROM sale
+        JOIN ticket USING (id_ticket)
+    WHERE YEAR(ticket_date) = 2016
+    GROUP BY s.id_article
+    ORDER BY best_seller DESC LIMIT 1) AS best_seller,
+    
+    (SELECT SUM(quantity) AS least_sold
+    FROM sale
+        JOIN ticket USING (id_ticket)
+    WHERE YEAR(ticket_date) = 2016
+    GROUP BY s.id_article
+    ORDER BY least_sold ASC LIMIT 1) AS least_sold
 
+    FROM type
+    JOIN article USING (id_type)
+    JOIN sale s USING (id_article)
+    JOIN ticket USING (id_ticket)
+    WHERE YEAR(ticket_date) = 2016
+    GROUP BY id_type, id_article;
+
+-- SUBQUERY 1 
+
+SELECT id_type, type_name, id_article, article_name, SUM(quantity) AS best_seller
+FROM type
+    JOIN article USING (id_type)
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE YEAR(ticket_date) = 2016
+GROUP BY id_type, id_article
+ORDER BY best_seller DESC LIMIT 1;
+
+-- SUBQUERY 2
+
+SELECT id_type, type_name, id_article, article_name, SUM(quantity) AS least_sold
+FROM type
+    JOIN article USING (id_type)
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE YEAR(ticket_date) = 2016
+GROUP BY id_type, id_article
+ORDER BY least_sold ASC LIMIT 1;
 
 -- 8/ Donner pour toutes les couleurs de bières la plus vendue pour chacune des années 2015, 2016 et 2017 
 
