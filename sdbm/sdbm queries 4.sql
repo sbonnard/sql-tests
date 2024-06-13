@@ -69,7 +69,19 @@ ORDER BY id_article, year_;
 
 -- 6/ Récupérer pour chaque pays la ou les marques de bière dont le degrès d'alcool moyen est le plus élevé en affichant le degré d'alcool moyen
 
-
+SELECT id_country, country_name, id_brand, brand_name, ROUND(AVG(alcohol), 2) AS average_alcohol
+FROM country c
+    JOIN brand USING (id_country)
+    JOIN article USING (id_brand)
+    GROUP BY id_country, id_brand
+HAVING AVG(alcohol) = (
+        SELECT AVG(alcohol) as average_alcohol
+        FROM country
+            JOIN brand USING (id_country)
+            JOIN article USING (id_brand)
+        WHERE id_country = c.id_country
+    )
+    ORDER BY id_brand ASC;
 
 -- 7/ Donner pour chaque type de bière, la bière la plus vendue et la bière la moins vendue en 2016
 
