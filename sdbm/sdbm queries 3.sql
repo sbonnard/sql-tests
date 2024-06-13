@@ -62,3 +62,16 @@ WHERE id_article NOT IN (
 );
 
 -- 6/ Donner la liste des bières qui n'ont pas été vendues en 2014 mais ont été vendues en 2015. (Id, nom et volume)
+
+SELECT id_article, article_name, volume
+FROM article
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE YEAR(ticket_date) = 2015 AND id_article NOT IN (
+    SELECT id_article
+    FROM article
+        JOIN sale USING (id_article)
+        JOIN ticket USING (id_ticket)
+    WHERE YEAR(ticket_date) = 2014
+)
+GROUP BY id_article;
