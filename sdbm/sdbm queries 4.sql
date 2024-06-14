@@ -13,12 +13,13 @@ WHERE alcohol = (
             JOIN brand USING (id_country)
             JOIN article USING (id_brand)
         WHERE id_continent = c.id_continent
-    );
+    )
+    ORDER BY id_continent;
 
 -- 2/ Récupérer le volume de bières vendu pour chaque mois et pour chaque type de bière
 -- classés par années, mois et type de bière
 
-SELECT YEAR(ticket_date) AS year_, MONTH(ticket_date) AS month_, SUM(volume * quantity) / 100 AS volume_litres, id_type, type_name
+SELECT YEAR(ticket_date) AS year_, MONTH(ticket_date) AS month_, ROUND(SUM(volume * quantity) / 100, 2) AS volume_litres, id_type, type_name
 FROM ticket
     JOIN sale USING (id_ticket)
     JOIN article USING (id_article)
@@ -125,7 +126,7 @@ ORDER BY average_alcohol DESC;
 
 -- 7/ Donner pour chaque type de bière, la bière la plus vendue et la bière la moins vendue en 2016
 
-SELECT id_type, type_name, id_article, article_name, 
+EXPLAIN SELECT id_type, type_name, id_article, article_name, 
    
     (SELECT SUM(quantity) AS best_seller
     FROM sale
@@ -149,7 +150,26 @@ SELECT id_type, type_name, id_article, article_name,
     GROUP BY id_type, id_article;
 
 
+-------------------------------------------------------------------
 
+SELECT id_type, type_name, id_article, article_name, SUM(quantity) AS best_seller, SUM(quantity) AS least_sold
+
+    FROM type t
+    JOIN article USING (id_type)
+    JOIN sale s USING (id_article)
+    JOIN ticket USING (id_ticket)
+    WHERE YEAR(ticket_date) = 2016
+    GROUP BY id_type, id_article
+    HAVING best_seller = (
+        SELECT MAX(best_seller)
+        FROM sale
+    )
+    AND least_sold = (
+        SELECT MIN(least_sold)
+        FROM sale
+    );
+
+-------------------------------------------------------------------
 
 SELECT id_type, type_name, id_article AS article_id, article_name, SUM(quantity) AS best_seller, SUM(quantity) AS least_sold
 FROM type
