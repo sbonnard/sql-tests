@@ -90,23 +90,40 @@ SELECT id_type, type_name, id_article, article_name,
     (SELECT SUM(quantity) AS best_seller
     FROM sale
         JOIN ticket USING (id_ticket)
-    WHERE YEAR(ticket_date) = 2016
+    WHERE YEAR(ticket_date) = 2016 AND id_type = t.id_type
     GROUP BY s.id_article
     ORDER BY best_seller) AS best_seller,
     
     (SELECT SUM(quantity) AS least_sold
     FROM sale
         JOIN ticket USING (id_ticket)
-    WHERE YEAR(ticket_date) = 2016
+    WHERE YEAR(ticket_date) = 2016 AND id_type = t.id_type
     GROUP BY s.id_article
     ORDER BY least_sold) AS least_sold
 
-    FROM type
+    FROM type t
     JOIN article USING (id_type)
     JOIN sale s USING (id_article)
     JOIN ticket USING (id_ticket)
     WHERE YEAR(ticket_date) = 2016
     GROUP BY id_type, id_article;
+
+
+
+
+SELECT id_type, type_name, id_article AS article_id, article_name, SUM(quantity) AS best_seller, SUM(quantity) AS least_sold
+FROM type
+    JOIN article USING (id_type)
+    JOIN sale s USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE YEAR(ticket_date) = 2016
+GROUP BY id_type, id_article
+HAVING best_seller >= ALL (
+    SELECT SUM(quantity) AS best_seller
+    FROM sale
+    WHERE id_article = article_id
+    GROUP BY id_article
+    );
 
 -- SUBQUERY 1 
 
