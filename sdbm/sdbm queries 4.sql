@@ -35,16 +35,17 @@ FROM country
     JOIN brand USING (id_country)
     JOIN article USING (id_brand)
     JOIN sale s USING (id_article)
-WHERE country_name = 'Allemagne' AND id_ticket IN (
+WHERE country_name = 'Allemagne' AND EXISTS (
     SELECT id_ticket
     FROM country
         JOIN brand USING (id_country)
         JOIN article USING (id_brand)
         JOIN sale USING (id_article)
-    WHERE country_name = 'France' 
+    WHERE country_name = 'France' AND id_ticket = s.id_ticket
+    GROUP BY id_ticket 
 )
 GROUP BY id_article
-ORDER BY id_article;
+ORDER BY article_name;
 
 -- 4/ Récupérer la liste des bières pour lequelles les ventes ont agumentées entre 2015 et 2016
 
