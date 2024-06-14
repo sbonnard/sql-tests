@@ -69,19 +69,59 @@ ORDER BY id_article, year_;
 
 -- 6/ Récupérer pour chaque pays la ou les marques de bière dont le degrès d'alcool moyen est le plus élevé en affichant le degré d'alcool moyen
 
-SELECT id_country, country_name, id_brand, brand_name, ROUND(AVG(alcohol), 2) AS average_alcohol
+SELECT id_country AS country_id, country_name, id_brand AS brand_id, brand_name, ROUND((SUM(alcohol)) / COUNT(id_article), 2) AS average_alcohol
 FROM country c
     JOIN brand USING (id_country)
     JOIN article USING (id_brand)
     GROUP BY id_country, id_brand
-HAVING AVG(alcohol) = (
-        SELECT AVG(alcohol) as average_alcohol
-        FROM country
-            JOIN brand USING (id_country)
-            JOIN article USING (id_brand)
-        WHERE id_country = c.id_country
+HAVING average_alcohol = ALL (
+    SELECT ROUND((SUM(alcohol)) / COUNT(id_article), 2) as average_alcohol
+    FROM country
+        JOIN brand USING (id_country)
+        JOIN article USING (id_brand)
+    WHERE id_brand = brand_id
+    GROUP BY id_article
     )
-    ORDER BY id_brand ASC;
+    ORDER BY id_brand, id_country;
+
+-- STRONGEST BEER FROM FRANCE, NOT USEFUL
+
+SELECT id_country, country_name, id_brand, brand_name, alcohol
+FROM country
+    JOIN brand USING (id_country)
+    JOIN article USING (id_brand)
+WHERE id_country = 9
+GROUP BY id_brand, id_country, alcohol
+ORDER BY alcohol DESC LIMIT 1;
+
+----------------------------------------------------
+
+-- CALCULATE THE AVERAGE ALCOHOL FROM EACH BREWERY
+
+SELECT id_country, country_name, id_brand, brand_name, SUM(alcohol) / COUNT(id_article) AS average_alcohol
+FROM article
+    JOIN brand USING (id_brand)
+    JOIN country USING (id_country)
+GROUP BY id_brand, id_country
+ORDER BY average_alcohol DESC;
+
+--------------------------------------------------------
+
+
+SELECT id_country, country_name, id_brand, brand_name, SUM(alcohol) / COUNT(id_article) AS average_alcohol
+FROM article
+    JOIN brand USING (id_brand)
+    JOIN country USING (id_country)
+GROUP BY id_brand, id_country
+HAVING average_alcohol >= ALL (
+    SELECT id_country, country_name, id_brand, brand_name, SUM(alcohol) / COUNT(id_article) AS average_alcohol
+FROM article
+    JOIN brand USING (id_brand)
+    JOIN country USING (id_country)
+GROUP BY id_brand, id_country
+ORDER BY average_alcohol DESC;
+);
+
 
 -- 7/ Donner pour chaque type de bière, la bière la plus vendue et la bière la moins vendue en 2016
 
