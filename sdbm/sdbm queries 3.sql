@@ -55,8 +55,7 @@ SELECT id_article, article_name, volume
 FROM article
 WHERE id_article NOT IN (
     SELECT id_article
-    FROM article
-        JOIN sale USING (id_article)
+    FROM sale
         JOIN ticket USING (id_ticket)
     WHERE YEAR(ticket_date) IN (2014, 2015)
 );
@@ -75,3 +74,20 @@ WHERE YEAR(ticket_date) = 2015 AND id_article NOT IN (
     WHERE YEAR(ticket_date) = 2014
 )
 GROUP BY id_article;
+
+-- OR EVEN BETTER BECAUSE WAY FASTER 
+
+SELECT id_article, article_name, volume
+FROM article
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE YEAR(ticket_date) = 2015 
+GROUP BY id_article
+HAVING id_article NOT IN (
+    SELECT id_article
+    FROM article
+        JOIN sale USING (id_article)
+        JOIN ticket USING (id_ticket)
+    WHERE YEAR(ticket_date) = 2014
+    GROUP BY id_article
+);

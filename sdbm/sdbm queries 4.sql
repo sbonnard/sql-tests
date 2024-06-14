@@ -141,10 +141,10 @@ SELECT id_color, color_name,
     ORDER BY best_seller DESC LIMIT 1) AS best_seller
 FROM color
     JOIN article USING (id_color)
-    JOIN sale USING (id_article)
+    JOIN sale s USING (id_article)
     JOIN ticket USING (id_ticket)
-WHERE years IN (2015, 2016, 2017)
-GROUP BY id_color;
+WHERE YEAR(ticket_date) IN (2015, 2016, 2017)
+GROUP BY id_color, best_seller;
 
 SELECT ticket_date, id_color, color_name, SUM(quantity) AS best_seller
 FROM color
