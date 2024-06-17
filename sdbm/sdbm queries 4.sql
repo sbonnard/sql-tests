@@ -109,19 +109,51 @@ GROUP BY year_;
 
 -- 6/ Récupérer pour chaque pays la ou les marques de bière dont le degrès d'alcool moyen est le plus élevé en affichant le degré d'alcool moyen
 
-SELECT id_country AS country_id, country_name, id_brand AS brand_id, brand_name, AVG(alcohol) AS average_alcohol
-FROM country 
+SELECT id_country AS id_country1, country_name, brand_name, AVG(alcohol) AS average_alcohol
+FROM country
     JOIN brand USING (id_country)
     JOIN article USING (id_brand)
-    GROUP BY id_brand
+GROUP BY id_brand
 HAVING average_alcohol >= ALL (
-    SELECT AVG(alcohol) as average_alcohol
+    SELECT AVG(alcohol)
     FROM brand
         JOIN article USING (id_brand)
-    WHERE id_country = country_id
+    WHERE id_country = id_country1
     GROUP BY id_brand
-    )
-ORDER BY id_country;
+);
+
+
+SELECT id_country AS id_country1, country_name, brand_name, AVG(alcohol) AS average_alcohol
+FROM country
+    JOIN brand USING (id_country)
+    JOIN article USING (id_brand)
+GROUP BY id_brand
+HAVING average_alcohol = (
+    SELECT MAX(avg) 
+    FROM (
+        SELECT AVG(alcohol) AS avg
+        FROM brand
+            JOIN article USING (id_brand)
+        WHERE id_country = id_country1
+        GROUP BY id_brand
+    ) AS avg_alcohol_brand
+);
+
+
+SELECT id_country AS id_country1, country_name, brand_name, AVG(alcohol) AS average_alcohol
+FROM country
+    JOIN brand USING (id_country)
+    JOIN article USING (id_brand)
+GROUP BY id_brand
+HAVING average_alcohol = (
+    SELECT AVG(alcohol) AS avg
+    FROM brand 
+        JOIN article USING (id_brand)
+    WHERE id_country = id_country1
+    GROUP BY id_brand
+    ORDER BY avg DESC
+    LIMIT 1
+);
 
 -- STRONGEST BEER FROM FRANCE, NOT USEFUL
 
@@ -137,15 +169,66 @@ ORDER BY alcohol DESC LIMIT 1;
 
 -- CALCULATE THE AVERAGE ALCOHOL FROM EACH BREWERY
 
-SELECT id_country, country_name, id_brand, brand_name, SUM(alcohol) / COUNT(id_article) AS average_alcohol
+SELECT id_brand, brand_name, ROUND(AVG(alcohol), 2) AS average_alcohol
 FROM article
     JOIN brand USING (id_brand)
     JOIN country USING (id_country)
-GROUP BY id_brand, id_country
+GROUP BY id_brand
 ORDER BY average_alcohol DESC;
 
 
 -- 7/ Donner pour chaque type de bière, la bière la plus vendue et la bière la moins vendue en 2016
+
+
+SELECT id_type AS type_id, type_name, id_article, article_name, SUM(quantity) AS best_seller, SUM(quantity) AS least_sold
+FROM type t
+    JOIN article USING (id_type)
+    JOIN sale s USING (id_article)
+    JOIN ticket USING (id_ticket)
+GROUP BY id_type, id_article
+HAVING best_seller >= ALL (
+    SELECT SUM(quantity) AS total_sold
+    FROM article
+        JOIN sale USING (id_article)
+        JOIN ticket USING (id_ticket)
+        JOIN type USING (id_type)
+    WHERE YEAR(ticket_date) = 2016
+    GROUP BY id_type
+    )
+ORDER BY id_type;
+
+
+    AND least_sold <= ALL (
+        SELECT SUM(quantity)
+        FROM sale
+            JOIN article USING (id_article)
+            JOIN ticket USING (id_ticket)
+            JOIN type USING (id_type)
+        WHERE YEAR(ticket_date) = 2016
+        GROUP BY id_article
+    );
+
+
+-- THE MOST SOLD BEER EVER 
+
+SELECT id_article, article_name, SUM(quantity) AS total_sold
+FROM article
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+GROUP BY id_article
+ORDER BY total_sold DESC LIMIT 1;
+
+-- THE MOST SOLD BEER IN 2016 
+
+SELECT id_article, article_name, SUM(quantity) AS total_sold
+FROM article
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE YEAR(ticket_date) = 2016
+GROUP BY id_article
+ORDER BY total_sold DESC LIMIT 1;
+
+-------------------------------------------------------------------
 
 EXPLAIN SELECT id_type, type_name, id_article, article_name, 
    
@@ -169,26 +252,6 @@ EXPLAIN SELECT id_type, type_name, id_article, article_name,
     JOIN ticket USING (id_ticket)
     WHERE YEAR(ticket_date) = 2016
     GROUP BY id_type, id_article;
-
-
--------------------------------------------------------------------
-
-SELECT id_type, type_name, id_article, article_name, SUM(quantity) AS best_seller, SUM(quantity) AS least_sold
-
-    FROM type t
-    JOIN article USING (id_type)
-    JOIN sale s USING (id_article)
-    JOIN ticket USING (id_ticket)
-    WHERE YEAR(ticket_date) = 2016
-    GROUP BY id_type, id_article
-    HAVING best_seller = (
-        SELECT MAX(best_seller)
-        FROM sale
-    )
-    AND least_sold = (
-        SELECT MIN(least_sold)
-        FROM sale
-    );
 
 -------------------------------------------------------------------
 
