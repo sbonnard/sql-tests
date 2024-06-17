@@ -179,117 +179,55 @@ ORDER BY average_alcohol DESC;
 
 -- 7/ Donner pour chaque type de bière, la bière la plus vendue et la bière la moins vendue en 2016
 
-
-SELECT id_type AS type_id, type_name, id_article, article_name, SUM(quantity) AS best_seller, SUM(quantity) AS least_sold
-FROM type t
-    JOIN article USING (id_type)
-    JOIN sale s USING (id_article)
+-------------------------------------------------------------
+CREATE VIEW beer_sales_by_article_2016 AS
+SELECT id_article, article_name, SUM(quantity) AS total_sold
+FROM article
+    JOIN sale USING (id_article)
     JOIN ticket USING (id_ticket)
-GROUP BY id_type, id_article
-HAVING best_seller >= ALL (
-    SELECT SUM(quantity) AS total_sold
-    FROM article
-        JOIN sale USING (id_article)
-        JOIN ticket USING (id_ticket)
-        JOIN type USING (id_type)
-    WHERE YEAR(ticket_date) = 2016
-    GROUP BY id_type
-    )
+WHERE YEAR(ticket_date) = 2016
+GROUP BY id_article
+ORDER BY total_sold;
+-------------------------------------------------------------
+
+(
+SELECT id_type, type_name, b.article_name, 'best-seller' AS sales
+FROM beer_sales_by_article_2016 b
+    JOIN article USING (id_article)
+    JOIN type t USING (id_type)
+WHERE total_sold >= ALL (
+    SELECT total_sold
+    FROM beer_sales_by_article_2016
+    JOIN article USING (id_article)
+    JOIN type USING (id_type)
+    WHERE id_type = t.id_type
+)) 
+UNION
+(
+SELECT id_type, type_name, b.article_name, 'worst-seller' AS sales
+FROM beer_sales_by_article_2016 b
+    JOIN article USING (id_article)
+    JOIN type t USING (id_type)
+WHERE total_sold <= ALL (
+    SELECT total_sold
+    FROM beer_sales_by_article_2016
+    JOIN article USING (id_article)
+    JOIN type USING (id_type)
+    WHERE id_type = t.id_type
+)) 
 ORDER BY id_type;
 
 
-    AND least_sold <= ALL (
-        SELECT SUM(quantity)
-        FROM sale
-            JOIN article USING (id_article)
-            JOIN ticket USING (id_ticket)
-            JOIN type USING (id_type)
-        WHERE YEAR(ticket_date) = 2016
-        GROUP BY id_article
-    );
-
-
--- THE MOST SOLD BEER EVER 
-
-SELECT id_article, article_name, SUM(quantity) AS total_sold
-FROM article
-    JOIN sale USING (id_article)
-    JOIN ticket USING (id_ticket)
-GROUP BY id_article
+------ BESTSELLER FROM 2016
+SELECT total_sold, article_name
+FROM beer_sales_by_article_2016
 ORDER BY total_sold DESC LIMIT 1;
 
--- THE MOST SOLD BEER IN 2016 
 
-SELECT id_article, article_name, SUM(quantity) AS total_sold
-FROM article
-    JOIN sale USING (id_article)
-    JOIN ticket USING (id_ticket)
-WHERE YEAR(ticket_date) = 2016
-GROUP BY id_article
-ORDER BY total_sold DESC LIMIT 1;
-
--------------------------------------------------------------------
-
-EXPLAIN SELECT id_type, type_name, id_article, article_name, 
-   
-    (SELECT SUM(quantity) AS best_seller
-    FROM sale
-        JOIN ticket USING (id_ticket)
-    WHERE YEAR(ticket_date) = 2016 AND id_type = t.id_type
-    GROUP BY s.id_article
-    ORDER BY best_seller) AS best_seller,
-    
-    (SELECT SUM(quantity) AS least_sold
-    FROM sale
-        JOIN ticket USING (id_ticket)
-    WHERE YEAR(ticket_date) = 2016 AND id_type = t.id_type
-    GROUP BY s.id_article
-    ORDER BY least_sold) AS least_sold
-
-    FROM type t
-    JOIN article USING (id_type)
-    JOIN sale s USING (id_article)
-    JOIN ticket USING (id_ticket)
-    WHERE YEAR(ticket_date) = 2016
-    GROUP BY id_type, id_article;
-
--------------------------------------------------------------------
-
-SELECT id_type, type_name, id_article AS article_id, article_name, SUM(quantity) AS best_seller, SUM(quantity) AS least_sold
-FROM type
-    JOIN article USING (id_type)
-    JOIN sale s USING (id_article)
-    JOIN ticket USING (id_ticket)
-WHERE YEAR(ticket_date) = 2016
-GROUP BY id_type, id_article
-HAVING best_seller >= ALL (
-    SELECT SUM(quantity) AS best_seller
-    FROM sale
-    WHERE id_article = article_id
-    GROUP BY id_article
-    );
-
--- SUBQUERY 1 
-
-SELECT id_type, type_name, id_article, article_name, SUM(quantity) AS best_seller
-FROM type
-    JOIN article USING (id_type)
-    JOIN sale USING (id_article)
-    JOIN ticket USING (id_ticket)
-WHERE YEAR(ticket_date) = 2016
-GROUP BY id_type, id_article
-ORDER BY best_seller DESC LIMIT 1;
-
--- SUBQUERY 2
-
-SELECT id_type, type_name, id_article, article_name, SUM(quantity) AS least_sold
-FROM type
-    JOIN article USING (id_type)
-    JOIN sale USING (id_article)
-    JOIN ticket USING (id_ticket)
-WHERE YEAR(ticket_date) = 2016
-GROUP BY id_type, id_article
-ORDER BY least_sold ASC LIMIT 1;
+------ WORSTSELLER FROM 2016
+SELECT total_sold, article_name
+FROM beer_sales_by_article_2016
+ORDER BY total_sold ASC LIMIT 1;
 
 -- 8/ Donner pour toutes les couleurs de bières la plus vendue pour chacune des années 2015, 2016 et 2017 
 
