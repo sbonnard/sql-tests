@@ -227,19 +227,45 @@ GROUP BY id_color, best_seller;
 SELECT ticket_date, id_color, color_name, SUM(quantity) AS best_seller
 FROM color
     JOIN article USING (id_color)
-    JOIN sale USING (id_article)
+    JOIN sale s USING (id_article)
     JOIN ticket USING (id_ticket)
-WHERE YEAR(ticket_date) IN (2015, 2016, 2017) AND SUM(quantity) IN (
+WHERE YEAR(ticket_date) IN (2015, 2016, 2017) AND SUM(quantity) >= ALL(
     SELECT SUM(quantity) AS best_seller
     FROM sale
         JOIN ticket USING (id_ticket)
     GROUP BY s.id_article
-    -- ORDER BY best_seller DESC LIMIT 1
+    ORDER BY best_seller DESC
 )
 GROUP BY id_color;
     
 -- 9/ Lister les marques de bières dont le volume total vendu (en litres) en 2015 est supérieur à celui de Heineken.
 
+SELECT id_brand, brand_name, SUM(quantity) AS total_sold
+FROM brand
+    JOIN article USING (id_brand)
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE YEAR(ticket_date) = 2015
+GROUP BY id_brand
+HAVING total_sold > (
+    SELECT SUM(quantity) AS total_sold
+    FROM brand
+        JOIN article USING (id_brand)
+        JOIN sale USING (id_article)
+        JOIN ticket USING (id_ticket)
+    WHERE YEAR(ticket_date) = 2015 AND brand_name = 'Heineken'
+    GROUP BY id_brand
+    )
+ORDER BY total_sold;
+
+-- SUBQUERY FOR HEINEKEN SALES IN 2015
+SELECT id_brand, brand_name, SUM(quantity) AS total_sold
+FROM brand
+    JOIN article USING (id_brand)
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE YEAR(ticket_date) = 2015 AND brand_name = 'Heineken'
+GROUP BY id_brand;
 
 
 -- 10/ Lister les marques de bières dont le volume total vendu (en litres) est supérieur à celui de Heineken pour chaque année entre 2015 et 2017.
