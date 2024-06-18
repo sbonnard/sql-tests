@@ -73,8 +73,26 @@ ORDER BY SUM(quantity * volume) / 100 DESC LIMIT 1;
 
 -- 4/ Automatiser la mise à jour de la date d'un ticket à la date du jour à chaque ajout d'une bière à celui-ci.
 
-CREATE TRIGGER update_date_for_ticket AFTER INSERT INTO sale
-FOR EACH ROW UPDATE INTO ticket (ticket_date) VALUES (NEW.CURDATE());
+
+------------------------ TRIGGER ------------------------
+DELIMITER //
+
+CREATE TRIGGER update_date_for_ticket
+AFTER INSERT ON sale
+FOR EACH ROW
+BEGIN
+    UPDATE ticket
+    SET ticket_date = CURDATE()
+    WHERE id_ticket = NEW.id_ticket;
+END //
+
+DELIMITER ;
+
+---------------------------------------------------------
+------------------------- QUERY -------------------------
+
+INSERT INTO sale (id_ticket, id_article, quantity)
+VALUES (20141, 15, 1);
 
 -- 5/ Donnez la liste des marques de bière dont au moins une bière a vendu plus de 500 unitées en 2016
 
