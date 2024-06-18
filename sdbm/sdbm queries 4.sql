@@ -250,6 +250,30 @@ ORDER BY color_id, years;
     
 -- 9/ Lister les marques de bières dont le volume total vendu (en litres) en 2015 est supérieur à celui de Heineken.
 
+-- WITH A VIEW
+CREATE VIEW brand_volume_years AS 
+SELECT brand_name, YEAR(ticket_date) AS years,(SUM(volume*quantity)/100) AS volume_total
+FROM article
+    JOIN sale USING (id_article)
+    JOIN brand USING (id_brand)
+    JOIN ticket USING (id_ticket)
+GROUP BY id_brand, years;
+
+-- WAY EASIER
+
+SELECT brand_name, volume_total
+FROM  brand_volume_years
+WHERE years = 2015 AND volume_total > 
+(
+    SELECT volume_total
+    FROM  brand_volume_years
+    WHERE years = 2015  AND brand_name = "Heineken" 
+);
+
+-----------------------------------------------------------------------
+
+-- WITHOUT VIEWS
+
 SELECT id_brand, brand_name, SUM(quantity * volume) /100 AS total_sold
 FROM brand
     JOIN article USING (id_brand)
