@@ -14,13 +14,14 @@ ORDER BY id_maker, id_type, years;
 
 SELECT years, id_maker, maker_name, id_type AS type_id, type_name, total_sold
 FROM maker_beers_by_type m
-WHERE total_sold IN (
+WHERE years = 2016 AND total_sold >= (
     SELECT total_sold
     FROM maker_beers_by_type
-    WHERE id_type = m.id_type AND years = 2016
+    WHERE id_maker = m.id_maker AND years = 2016
+    ORDER BY total_sold DESC LIMIT 1
 )
 GROUP BY id_maker, total_sold, id_type, years
-HAVING type_name = 'Abbaye' AND years = 2016
+HAVING type_name = 'Abbaye'
 ORDER BY total_sold;
 
 -- 2/ Automatiser le calcul de la quantité total de bière vendu en nombre de bière. pour un jour donné.
