@@ -12,7 +12,7 @@ GROUP BY id_maker, id_type, years
 ORDER BY id_maker, id_type, years;
 
 
-SELECT years, id_maker, maker_name, id_type AS type_id, type_name, total_sold
+SELECT years, id_maker, maker_name, id_type, type_name, total_sold
 FROM maker_beers_by_type m
 WHERE years = 2016 AND total_sold >= (
     SELECT total_sold
@@ -21,20 +21,60 @@ WHERE years = 2016 AND total_sold >= (
     ORDER BY total_sold DESC LIMIT 1
 )
 GROUP BY id_maker, total_sold, id_type, years
-HAVING type_name = 'Abbaye'
+HAVING type_name = 'Abbaye' --OR type_name = 'Trappiste'--
 ORDER BY total_sold;
 
 -- 2/ Automatiser le calcul de la quantité total de bière vendu en nombre de bière. pour un jour donné.
 
+CREATE VIEW quantity_sold_per_day AS
+SELECT DATE_FORMAT(ticket_date, "%Y-%m-%d") AS date_, SUM(quantity) AS quantity_sold
+FROM sale
+    JOIN ticket USING (id_ticket)
+GROUP BY date_;
 
+CREATE PROCEDURE get_quantity_sold_per_date (IN d DATE)
+SELECT DATE_FORMAT(ticket_date, "%Y-%m-%d") AS date_, SUM(quantity) AS quantity_sold
+FROM ticket
+    JOIN sale USING (id_ticket)
+GROUP BY date_
+HAVING date_ = d;
+
+CALL get_quantity_sold_per_date ("2016-03-22");
 
 -- 3/ Donner pour chaque année la ou les marques ayant vendues le plus gros volume de bière (en litres)
 
+SELECT YEAR(ticket_date) AS years, id_brand, brand_name, SUM(quantity * volume) / 100 AS total_litres_sold
+FROM brand b
+    JOIN article USING (id_brand)
+    JOIN sale USING (id_article)
+    JOIN ticket t USING (id_ticket)
+GROUP BY id_brand, years
+HAVING total_litres_sold >= ALL (
+    SELECT SUM(quantity * volume) / 100 AS total_litres_sold
+    FROM brand b
+        JOIN article USING (id_brand)
+        JOIN sale USING (id_article)
+        JOIN ticket USING (id_ticket)
+    WHERE YEAR(ticket_date) = years
+    GROUP BY years, id_brand
+);
+ 
+
+-- THE MOST SOLD BRAND IN 2015 
+SELECT YEAR(ticket_date) AS years, id_brand, brand_name
+FROM brand b
+    JOIN article USING (id_brand)
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+WHERE YEAR(ticket_date) = 2015
+GROUP BY years, id_brand
+ORDER BY SUM(quantity * volume) / 100 DESC LIMIT 1;
 
 
 -- 4/ Automatiser la mise à jour de la date d'un ticket à la date du jour à chaque ajout d'une bière à celui-ci.
 
-
+CREATE TRIGGER update_date_for_ticket AFTER INSERT INTO sale
+FOR EACH ROW UPDATE INTO ticket (ticket_date) VALUES (NEW.CURDATE());
 
 -- 5/ Donnez la liste des marques de bière dont au moins une bière a vendu plus de 500 unitées en 2016
 
