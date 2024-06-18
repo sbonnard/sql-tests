@@ -107,7 +107,7 @@ DELIMITER ;
 INSERT INTO sale (id_ticket, id_article, quantity)
 VALUES (20141, 15, 1);
 
--- 5/ Donnez la liste des marques de bière dont au moins une bière a vendu plus de 500 unitées en 2016
+-- 5/ Donnez la liste des marques de bière dont au moins une bière a vendu plus de 500 unités en 2016
 
 SELECT id_article, article_name
 
