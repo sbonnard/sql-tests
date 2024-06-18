@@ -43,6 +43,8 @@ CALL get_quantity_sold_per_date ("2016-03-22");
 
 -- 3/ Donner pour chaque année la ou les marques ayant vendues le plus gros volume de bière (en litres)
 
+
+--------------------------- FULL QUERY ------------------------------
 SELECT YEAR(ticket_date) AS years, id_brand, brand_name, SUM(quantity * volume) / 100 AS total_litres_sold
 FROM brand b
     JOIN article USING (id_brand)
@@ -58,8 +60,19 @@ HAVING total_litres_sold >= ALL (
     WHERE YEAR(ticket_date) = years
     GROUP BY years, id_brand
 );
- 
 
+-------------------------- WITH VIEW -------------------------------
+
+SELECT brand_name, years
+FROM brand_volume_years b
+WHERE volume_total >= ALL (
+    SELECT volume_total
+    FROM brand_volume_years
+    WHERE years = b.years
+)
+ORDER BY years;
+
+--------------------------------------------------------------------
 -- THE MOST SOLD BRAND IN 2015 
 SELECT YEAR(ticket_date) AS years, id_brand, brand_name
 FROM brand b
@@ -96,7 +109,7 @@ VALUES (20141, 15, 1);
 
 -- 5/ Donnez la liste des marques de bière dont au moins une bière a vendu plus de 500 unitées en 2016
 
-
+SELECT id_article, article_name
 
 -- 6/ Automatiser le fait de pouvoir augmenter ou diminuer les prix de toutes les bières d'une même marque d'un certain pourcentage.
 
