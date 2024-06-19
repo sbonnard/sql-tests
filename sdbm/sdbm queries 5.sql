@@ -109,7 +109,18 @@ VALUES (20141, 15, 1);
 
 -- 5/ Donnez la liste des marques de bière dont au moins une bière a vendu plus de 500 unités en 2016
 
-SELECT id_article, article_name
+CREATE VIEW sales_by_article_per_years AS
+SELECT YEAR(ticket_date) AS years, id_brand, brand_name, id_article, article_name, SUM(quantity) AS total_sold
+FROM brand  
+    JOIN article USING (id_brand)
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+GROUP BY id_article, id_brand, years;
+
+SELECT years, brand_name, article_name, total_sold
+FROM sales_by_article_per_years
+WHERE years = 2016 AND total_sold > 500
+GROUP BY id_brand, total_sold, id_article;
 
 -- 6/ Automatiser le fait de pouvoir augmenter ou diminuer les prix de toutes les bières d'une même marque d'un certain pourcentage.
 
