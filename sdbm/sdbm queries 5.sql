@@ -124,6 +124,42 @@ GROUP BY id_brand, total_sold, id_article;
 
 -- 6/ Automatiser le fait de pouvoir augmenter ou diminuer les prix de toutes les bières d'une même marque d'un certain pourcentage.
 
+CREATE PROCEDURE modify_price_by_brand(IN percentage INT, IN this_id_brand INT)
+UPDATE article 
+SET purchase_price = purchase_price * (1 + percentage / 100)
+WHERE id_brand = this_id_brand;
 
+
+
+SELECT article_name, purchase_price
+FROM article
+WHERE id_brand = 1;
+
+CALL modify_price_by_brand(10, 1);
+
+SELECT article_name, purchase_price
+FROM article
+WHERE id_brand = 1;
 
 -- 7/ Donnez pour chaque type de bière le pourcentage de répartition par continent (en nb d'article)
+
+CREATE VIEW number_beer_by_type_by_continent AS
+SELECT COUNT(id_article) AS count_id, id_type, type_name, id_continent, continent_name
+FROM article
+    JOIN type USING (id_type)
+    JOIN brand USING (id_brand)
+    JOIN country USING (id_country)
+    JOIN continent USING (id_continent)
+GROUP BY id_type, id_continent
+ORDER BY id_type, id_continent;
+
+SELECT type_name,
+    ROUND(count_id / (
+        SELECT SUM(count_id)
+        FROM number_beer_by_type_by_continent
+        WHERE id_type = b.id_type
+        GROUP BY id_type
+    ) * 100, 2) AS percentage_,
+    continent_name
+FROM number_beer_by_type_by_continent b
+ORDER BY id_type;
