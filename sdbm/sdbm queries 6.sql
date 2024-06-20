@@ -29,37 +29,94 @@
 
 -- Calculer le nombre de points de fidélités gagnés par chaque fabricant pour chacune des années écoulées.
 
-CREATE VIEW total_litres_and_hectolitres_sold_by_type_by_maker AS
-SELECT YEAR(ticket_date) AS years, id_maker, maker_name, id_type, type_name, SUM(quantity * volume) / 100 AS total_litres_sold, SUM(quantity * volume) / 10000 AS total_hectolitres_sold
-    FROM ticket
-        JOIN sale USING (id_ticket)
-        JOIN article USING (id_article)
-        JOIN brand USING (id_brand)
-        JOIN maker USING (id_maker)
-        JOIN type USING (id_type)
-GROUP BY id_maker, id_type, years;
 
-CREATE VIEW total_litres_and_hectolitres_sold_by_type_by_maker_fidelity AS
-SELECT YEAR(ticket_date) AS years, id_maker, maker_name, id_type, type_name, SUM(quantity * volume) / 100 AS total_litres_sold, SUM(quantity * volume) / 10000 AS total_hectolitres_sold, 0 AS fidelity_points
-    FROM ticket
-        JOIN sale USING (id_ticket)
-        JOIN article USING (id_article)
-        JOIN brand USING (id_brand)
-        JOIN maker USING (id_maker)
-        JOIN type USING (id_type)
-GROUP BY id_maker, id_type, years;
+------------------------------------ VIEW WITH ALL THE DATAS OF QUANTITY AND MAKERS -----------------------------------
+CREATE VIEW volume_by_makers_by_types_years AS
+SELECT maker_name, brand_name, (SUM(volume * quantity) / 10000) AS volume, type_name, YEAR(ticket_date) AS year_
+FROM maker
+    JOIN brand USING (id_maker)
+    JOIN article USING (id_brand)
+    JOIN sale USING (id_article)
+    JOIN ticket USING (id_ticket)
+    JOIN type USING (id_type)
+GROUP BY id_maker, id_brand, id_type, year_
+ORDER BY id_maker, id_brand, year_;
+
+------------------------------------------ VIEW TO MANAGE LOYALTY -----------------------------------------------------
+CREATE VIEW loyalty_by_brand AS
+SELECT maker_name, brand_name, year_, SUM(volume),
+    CASE
+        WHEN SUM(volume) >= 20 THEN FLOOR(SUM(volume)) * 40
+        WHEN SUM(volume) >= 10 THEN FLOOR(SUM(volume)) * 30
+        WHEN SUM(volume) >= 5 THEN FLOOR(SUM(volume)) * 20
+        WHEN SUM(volume) >= 1 THEN FLOOR(SUM(volume)) * 10
+        ELSE 0
+    END AS loyalty_points
+FROM volume_by_makers_by_types_years
+GROUP BY maker_name, brand_name, year_
+ORDER BY maker_name, year_;
+
+--------------------------------------------- LOYALTY POINTS BY MAKER -------------------------------------------------
+SELECT maker_name, year_, SUM(loyalty_points) AS loyalty_points_base
+FROM loyalty_by_brand
+GROUP BY maker_name, year_
+ORDER BY maker_name, year_;
 
 
-CREATE PROCEDURE add_fidelity_points_to_maker_2014(IN id_m INT)
-UPDATE total_litres_and_hectolitres_sold_by_type_by_maker_fidelity
-SET fidelity_points = (
-    
-)
+------------------------------------------------- REWARDS BY YEAR------------------------------------------------------
 
+--2014
+CREATE VIEW bonus_points_2014 AS
+SELECT maker_name, 2014 AS year_,
+    SUM(CASE WHEN type_name = 'Abbaye' AND volume > 3 THEN 300 ELSE 0 END) AS abbaye_bonus,
+    SUM(CASE WHEN type_name = 'Pils et Lager' AND volume > 2 THEN 200 ELSE 0 END) AS pils_bonus,
+    SUM(CASE WHEN type_name = 'Stout' AND volume > 1 THEN 100 ELSE 0 END) AS stout_bonus
+FROM volume_by_makers_by_types_years
+WHERE year_ = 2014
+GROUP BY maker_name;
 
+SELECT maker_name, SUM(abbaye_bonus + pils_bonus + stout_bonus) AS total_bonus_points_2014
+FROM bonus_points_2014
+GROUP BY maker_name;
 
+--2015 
+CREATE VIEW bonus_points_2015 AS
+SELECT maker_name, 2015 AS year_,
+    SUM(CASE WHEN type_name = 'Abbaye' AND volume > 15 THEN 300 ELSE 0 END) AS abbaye_bonus,
+    SUM(CASE WHEN type_name = 'Pils et Lager' AND volume > 10 THEN 200 ELSE 0 END) AS pils_bonus,
+    SUM(CASE WHEN type_name = 'Lambic' AND volume > 5 THEN 100 ELSE 0 END) AS lambic_bonus
+FROM volume_by_makers_by_types_years
+WHERE year_ = 2015
+GROUP BY maker_name;
 
-CREATE PROCEDURE modify_price_by_brand(IN percentage INT, IN this_id_brand INT)
-UPDATE article 
-SET purchase_price = purchase_price * (1 + percentage / 100)
-WHERE id_brand = this_id_brand;
+SELECT maker_name, SUM(abbaye_bonus + pils_bonus + lambic_bonus) AS total_bonus_points_2015
+FROM bonus_points_2015
+GROUP BY maker_name;
+
+--2016
+CREATE VIEW bonus_points_2016  AS
+SELECT maker_name, 2016  AS year_,
+    SUM(CASE WHEN type_name = 'Trappiste' AND volume > 5 THEN 300 ELSE 0 END) AS trappiste_bonus,
+    SUM(CASE WHEN type_name = 'Bière Aromatisée' AND volume > 3 THEN 200 ELSE 0 END) AS flavoured_bonus,
+    SUM(CASE WHEN type_name = 'Ale' AND volume > 2 THEN 100 ELSE 0 END) AS ale_bonus
+FROM volume_by_makers_by_types_years
+WHERE year_ = 2016 
+GROUP BY maker_name;
+
+SELECT maker_name, SUM(trappiste_bonus + flavoured_bonus + ale_bonus) AS total_bonus_points_2016
+FROM bonus_points_2016
+GROUP BY maker_name;
+
+--2017
+CREATE VIEW bonus_points_2017  AS
+SELECT maker_name, 2017  AS year_,
+    SUM(CASE WHEN type_name = 'Trappiste' AND volume > 20 THEN 300 ELSE 0 END) AS trappiste_bonus,
+    SUM(CASE WHEN type_name = 'Bière de Saison' AND volume > 15 THEN 200 ELSE 0 END) AS saison_bonus,
+    SUM(CASE WHEN type_name = 'Stout' AND volume > 10 THEN 100 ELSE 0 END) AS stout_bonus
+FROM volume_by_makers_by_types_years
+WHERE year_ = 2017 
+GROUP BY maker_name;
+
+SELECT maker_name, SUM(trappiste_bonus + saison_bonus + stout_bonus) AS total_bonus_points_2017
+FROM bonus_points_2017
+GROUP BY maker_name;
